@@ -8,6 +8,7 @@ then returns the result to you as a Python object.
 
 A short example:
 
+    >>> import execjs
     >>> execjs.eval("'red yellow blue'.split(' ')")
     ['red', 'yellow', 'blue']
     >>> ctx = execjs.compile("""

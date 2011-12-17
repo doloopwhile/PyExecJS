@@ -2,23 +2,24 @@
 #encoding:shift-jis
 from __future__ import unicode_literals, division
 '''
-Run JavaScript code from Python.
+    Run JavaScript code from Python.
 
-PyExecJS is a porting of ExecJS from Ruby.
-PyExecJS automatically picks the best runtime available to evaluate your JavaScript program,
-then returns the result to you as a Python object.
+    PyExecJS is a porting of ExecJS from Ruby.
+    PyExecJS automatically picks the best runtime available to evaluate your JavaScript program,
+    then returns the result to you as a Python object.
 
-A short example:
+    A short example:
 
-    >>> execjs.eval("'red yellow blue'.split(' ')")
-    ['red', 'yellow', 'blue']
-    >>> ctx = execjs.compile("""
-    ...     function add(x, y) {
-    ...         return x + y;
-    ...     }
-    ... """)
-    >>> ctx.call("add", 1, 2)
-    3
+>>> import execjs
+>>> execjs.eval("'red yellow blue'.split(' ')")
+['red', 'yellow', 'blue']
+>>> ctx = execjs.compile("""
+...     function add(x, y) {
+...         return x + y;
+...     }
+... """)
+>>> ctx.call("add", 1, 2)
+3
 '''
 
 __version__ = str('1.0.0')
