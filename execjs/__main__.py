@@ -40,27 +40,12 @@ def main():
     if opts.expr:
         if isinstance(opts.expr, bytes):
             expr = opts.expr.decode()
+        else:
+            expr = opts.expr
         sys.stdout.write(repr(context.eval(expr)) + "\n")
     else:
-        try:
-            raw_input
-        except NameError:
-            pass
-        else:
-            input = raw_input
-
-        while 1:
-            try:
-                expr = input("> ")
-            except EOFError:
-                break
-            
-            try:
-                ret = context.eval(expr)
-            except execjs.Error as e:
-                sys.stdout.write(str(e) + "\n")
-            else:
-                sys.stdout.write(repr(ret) + "\n")
+        ret = context.eval(sys.stdin.read())
+        sys.stdout.write(repr(ret) + "\n")
     
 if "__main__" == __name__:
     main()

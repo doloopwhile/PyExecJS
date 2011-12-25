@@ -30,11 +30,11 @@ PyExecJS supports these runtimes:
 
 # Installation
 
-    $ pip install execjs
+    $ pip install PyExecJS
 
 or
     
-    $ easy_install execjs
+    $ easy_install PyExecJS
 
 
 # License
