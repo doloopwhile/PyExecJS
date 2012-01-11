@@ -19,6 +19,25 @@ A short example:
     >>> ctx.call("add", 1, 2)
     3
 
+Of course, you can pick particular JavaScript runtime by get() function:
+
+    >>> default = execjs.get() # the automatically picked runtime
+    >>> default.eval("1 + 2")
+    3
+    >>> jscript = execjs.get("JScript")
+    >>> jscript.eval("1 + 2")
+    3
+    >>> node = execjs.get("Node")
+    >>> node.eval("1 + 2")
+    3
+
+If EXECJS_RUNTIME environment variable is specified, PyExecJS pick the JavaScript runtime as a default:
+
+    >>> #execjs.get().name # this value is depends on your environment.
+    >>> os.environ["EXECJS_RUNTIME"] = "Node"
+    >>> execjs.get().name
+    'Node.js (V8)'
+
 PyExecJS supports these runtimes:
 
 * [PyV8](http://code.google.com/p/pyv8/) - A python wrapper for Google V8 engine, 
@@ -39,7 +58,7 @@ or
 
 # License
 
-Copyright (c) 2011 Omoto Kenji.
+Copyright (c) 2012 Omoto Kenji.
 Copyright (c) 2011 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
