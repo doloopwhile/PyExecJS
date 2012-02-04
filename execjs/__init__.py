@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #encoding:shift-jis
-from __future__ import unicode_literals, division
+from __future__ import unicode_literals, division, with_statement
 '''
     Run JavaScript code from Python.
 
@@ -22,10 +22,6 @@ from __future__ import unicode_literals, division
 3
 '''
 
-__version__ = str('1.0.0')
-__author__  = str("Omoto Kenji (doloopwhile@gmail.com)")
-__license__ = str("MIT License")
-
 import sys
 import os
 import os.path
@@ -34,8 +30,12 @@ import platform
 import tempfile
 from subprocess import Popen, PIPE, STDOUT
 import json
-from collections import OrderedDict
 
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+    
 __all__ = """
     get register runtimes get_from_environment exec_ eval compile
     ExternalRuntime Context
@@ -49,9 +49,15 @@ class RuntimeUnavailable(RuntimeError): pass
 
 
 def register(name, runtime):
+    '''Register a JavaScript runtime.'''
     _runtimes[name] = runtime
 
+
 def get(name=None):
+    """
+    Return a appropriate JavaScript runtime.
+    If name is specified, return the runtime.
+    """
     if name is None:
         return _auto_detect()
     
@@ -65,8 +71,16 @@ def get(name=None):
             "{name} runtime is not available on this system".format(name=runtime.name))
         return runtime
 
+
 def runtimes():
+    """return a dictionary of all supported JavaScript runtimes."""
     return dict(_runtimes)
+
+
+def available_runtimes():
+    """return a dictionary of all supported JavaScript runtimes which is usable"""
+    return dict((name, runtime) for name, runtime in _runtimes.items() if runtime.is_available())
+
 
 def _auto_detect():
     runtime = get_from_environment()
@@ -80,7 +94,12 @@ def _auto_detect():
     raise RuntimeUnavailable("Could not find a JavaScript runtime. " +
           "See https://github.com/sstephenson/execjs for a list of available runtimes.")
 
+
 def get_from_environment():
+    '''
+        Return the JavaScript runtime that is specified in EXECJS_RUNTIME environment variable.
+        If EXECJS_RUNTIME environment variable is empty of invalid, return None.
+    '''
     try:
         name = os.environ["EXECJS_RUNTIME"]
     except KeyError:
@@ -89,14 +108,18 @@ def get_from_environment():
         return None
     return get(name)
 
+
 def eval(source):
     return get().eval(source)
+
 
 def exec_(source):
     return get().exec_(source)
 
+
 def compile(source):
     return get().compile(source)
+
 
 def _root():
     return os.path.abspath(os.path.dirname(__file__))
@@ -119,17 +142,29 @@ class ExternalRuntime:
         self._runner_path = runner_path
         self._encoding = encoding
     
+    def __str__(self):
+        return "{class_name}({runtime_name})".format(
+            class_name=type(self).__name__,
+            runtime_name=self._name,
+        )
+    
     @property
     def name(self):
         return self._name
     
     def exec_(self, source):
+        if not self.is_available():
+            raise RuntimeUnabailable()
         return self.Context(self).exec_(source)
     
     def eval(self, source):
+        if not self.is_available():
+            raise RuntimeUnabailable()
         return self.Context(self).eval(source)
 
     def compile(self, source):
+        if not self.is_available():
+            raise RuntimeUnabailable()
         return self.Context(self, source)
 
     def is_available(self):
@@ -172,7 +207,7 @@ class ExternalRuntime:
             which_command = [_windows_which(), name]
         else:
             which_command = ["command", "-v", name]
-        p = Popen(which_command, stdout=PIPE, stderr=PIPE)
+        p = Popen(which_command, stdout=PIPE, stderr=PIPE, shell=True)
         stdoutdata, _ = p.communicate()
         stdoutdata = stdoutdata.decode(sys.getfilesystemencoding())
         path = stdoutdata.strip().split('\n')[0]
@@ -263,13 +298,13 @@ def encode_unicode_codepoints(str):
     >>> encode_unicode_codepoints('\u4e16\u754c') == '\\u4e16\\u754c'
     True
     """
-    codepoint_format = '\\u{:04x}'.format
+    codepoint_format = '\\u{ord:04x}'.format
     def codepoint(ch):
         o = ord(ch)
         if o in range(0x80):
             return ch
         else:
-            return codepoint_format(o)
+            return codepoint_format(ord=o)
     return ''.join(map(codepoint, str))
 
 
@@ -302,7 +337,7 @@ class PyV8Runtime:
     class Context:
         def __init__(self, runtime, source=""):
             self._source = source
-
+        
         def exec_(self, source):
             source = '''\
             (function() {{
@@ -315,7 +350,9 @@ class PyV8Runtime:
             source = str(source)
             
             import PyV8
-            with PyV8.JSContext() as ctxt, PyV8.JSEngine() as engine:
+            import contextlib
+            #backward compatibility
+            with contextlib.nested(PyV8.JSContext(), PyV8.JSEngine()) as (ctxt, engine):
                 try:
                     script = engine.compile(source)
                 except PyV8.JSError as e:
@@ -365,6 +402,9 @@ for command in ["nodejs", "node"]:
     )
     if runtime.is_available():
         break
+
+del command
+del runtime
 
 _runtimes['JavaScriptCore'] = ExternalRuntime(
     name        = "JavaScriptCore",

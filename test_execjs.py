@@ -3,9 +3,13 @@
 from __future__ import unicode_literals
 import sys
 import io
-import unittest
-import doctest
 
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
+import doctest
 import execjs
 
 
@@ -99,9 +103,7 @@ def test_runtime_available(self):
     self.assertTrue(runtime.is_available())
     raise Exception
 
-for name, runtime in execjs.runtimes().items():
-    if not runtime.is_available():
-        continue
+for name, runtime in execjs.available_runtimes().items():
     class_name = name.capitalize() + "RuntimeTest"
     def f(runtime=runtime):
         class RuntimeTest(unittest.TestCase, RuntimeTestBase):
@@ -109,7 +111,7 @@ for name, runtime in execjs.runtimes().items():
                 self.runtime = runtime
         RuntimeTest.__name__ = str(class_name) # 2.x compatibility
         return RuntimeTest
-    exec("{} = f()".format(class_name))
+    exec("{class_name} = f()".format(class_name=class_name))
 
 
 def load_tests(loader, tests, ignore):

@@ -62,3 +62,11 @@ Copyright (c) 2012 Omoto Kenji.
 Copyright (c) 2011 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
+
+#Changes
+1.0.2
+: Python 2.6.x was supported.
+1.0.1
+: Forgotten shell=True was added to Popen.
+1.0.0
+: First release.
