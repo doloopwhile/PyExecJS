@@ -1,0 +1,6 @@
+#ignore python cache
+*.pyc
+__pycache__
+PyExecJS.egg-info/
+dist/
+build/
