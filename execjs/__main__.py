@@ -1,5 +1,5 @@
-#python3
-#encoding: shift-jis
+#!python3
+#encoding: ascii
 import sys
 import io
 from argparse import ArgumentParser, Action, SUPPRESS

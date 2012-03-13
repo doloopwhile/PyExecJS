@@ -1,13 +1,12 @@
 #python3
 #encoding: cp932
-##from __future__ import unicode_literals, division, with_statement
 from __future__ import division, with_statement
 version = '1.0.2'
 author  = "Omoto Kenji"
 license = "MIT License"
 author_email='doloopwhile@gmail.com'
 
-from setuptools import setup
+from setuptools import setup, find_packages
 import sys
 import io
 import execjs
@@ -21,14 +20,11 @@ else:
     install_requires = []
 
 setup(
-    packages=['execjs'],
-    package_dir={'execjs': 'execjs'},
-    package_data={
-        'execjs': ['support/*.*'],
-    },
+    packages=find_packages(),
+    include_package_data=True,
     name='PyExecJS',
     version=version,
-    description='Run JavaScript code from Python ',
+    description='Run JavaScript code from Python',
     long_description=long_description,
     author=author,
     author_email=author_email,
