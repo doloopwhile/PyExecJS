@@ -64,6 +64,8 @@ Copyright (c) 2011 Sam Stephenson and Josh Peek.
 Released under the MIT license. See `LICENSE` for details.
 
 #Changes
+1.0.3
+: Javascript sources were embeded in __init__.py. 'which' command were reimplemented by pure python.
 1.0.2
 : Python 2.6.x was supported.
 1.0.1

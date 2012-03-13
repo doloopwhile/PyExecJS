@@ -1,8 +1,7 @@
-#python3
-#encoding: cp932
-##from __future__ import unicode_literals, division, with_statement
+#!python3
+#encoding:ascii
 from __future__ import division, with_statement
-version = '1.0.2'
+version = '1.0.3'
 author  = "Omoto Kenji"
 license = "MIT License"
 author_email='doloopwhile@gmail.com'
@@ -23,9 +22,7 @@ else:
 setup(
     packages=['execjs'],
     package_dir={'execjs': 'execjs'},
-    package_data={
-        'execjs': ['support/*.*'],
-    },
+    package_data={},
     name='PyExecJS',
     version=version,
     description='Run JavaScript code from Python ',

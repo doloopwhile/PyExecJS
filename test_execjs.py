@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-#encoding:mbcs
+#!python3
+#encoding: ascii
 from __future__ import unicode_literals
 import sys
 import io
@@ -37,8 +37,8 @@ class RuntimeTestBase:
         self.assertEqual("hello", self.runtime.exec_("return 'hello'"))
         self.assertEqual([1, 2], self.runtime.exec_("return [1, 2]"))
         self.assertEqual({"a":1,"b":2}, self.runtime.exec_("return {a:1,b:2}"))
-        self.assertEqual("‚ ", self.runtime.exec_('return "‚ "'))
-        self.assertEqual("‚ ", self.runtime.exec_('return "\u3042"'))
+        self.assertEqual("\u3042", self.runtime.exec_('return "\u3042"'))   #unicode char
+        self.assertEqual("\u3042", self.runtime.exec_(r'return "\u3042"'))  #unicode char by escape sequence
         self.assertEqual("\\", self.runtime.exec_('return "\\\\"'))
 
     def test_eval(self):
@@ -54,8 +54,8 @@ class RuntimeTestBase:
         self.assertEqual(["red", "yellow", "blue"], self.runtime.eval("'red yellow blue'.split(' ')"))
         self.assertEqual({"a":1,"b":2}, self.runtime.eval("{a:1, b:2}"))
         self.assertEqual({"a":True}, self.runtime.eval("{a:true,b:function (){}}"))
-        self.assertEqual("‚ ", self.runtime.eval('"‚ "'))
-        self.assertEqual("‚ ", self.runtime.eval(r'"\u3042"'))
+        self.assertEqual("\u3042", self.runtime.eval('"\u3042"'))
+        self.assertEqual("\u3042", self.runtime.eval(r'"\u3042"'))
         self.assertEqual(r"\\", self.runtime.eval(r'"\\\\"'))
 
     def test_compile(self):
