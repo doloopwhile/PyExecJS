@@ -1,7 +1,7 @@
-#python3
-#encoding: cp932
+#!python3
+#encoding:ascii
 from __future__ import division, with_statement
-version = '1.0.2'
+version = '1.0.3'
 author  = "Omoto Kenji"
 license = "MIT License"
 author_email='doloopwhile@gmail.com'
