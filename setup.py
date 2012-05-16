@@ -1,7 +1,7 @@
 #!python3
 #encoding:ascii
 from __future__ import division, with_statement
-version = '1.0.3'
+version = '1.0.4'
 author  = "Omoto Kenji"
 license = "MIT License"
 author_email='doloopwhile@gmail.com'
@@ -9,7 +9,6 @@ author_email='doloopwhile@gmail.com'
 from setuptools import setup, find_packages
 import sys
 import io
-import execjs
 
 with io.open('README.md', encoding='ascii') as fp:
     long_description = fp.read()
