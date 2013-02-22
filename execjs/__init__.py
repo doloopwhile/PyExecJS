@@ -187,17 +187,17 @@ class ExternalRuntime:
     
     def exec_(self, source):
         if not self.is_available():
-            raise RuntimeUnabailable()
+            raise RuntimeUnavailable()
         return self.Context(self).exec_(source)
     
     def eval(self, source):
         if not self.is_available():
-            raise RuntimeUnabailable()
+            raise RuntimeUnavailable()
         return self.Context(self).eval(source)
 
     def compile(self, source):
         if not self.is_available():
-            raise RuntimeUnabailable()
+            raise RuntimeUnavailable()
         return self.Context(self, source)
 
     def is_available(self):
