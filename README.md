@@ -40,7 +40,7 @@ If EXECJS_RUNTIME environment variable is specified, PyExecJS pick the JavaScrip
 
 PyExecJS supports these runtimes:
 
-* [PyV8](http://code.google.com/p/pyv8/) - A python wrapper for Google V8 engine, 
+* [PyV8](http://code.google.com/p/pyv8/) - A python wrapper for Google V8 engine,
 * [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore - Included with Mac OS X
 * [Mozilla SpiderMonkey](http://www.mozilla.org/js/spidermonkey/)
@@ -52,7 +52,7 @@ PyExecJS supports these runtimes:
     $ pip install PyExecJS
 
 or
-    
+
     $ easy_install PyExecJS
 
 
@@ -64,6 +64,8 @@ Copyright (c) 2011 Sam Stephenson and Josh Peek.
 Released under the MIT license. See `LICENSE` for details.
 
 #Changes
+1.0.5
+: Supported Python 3.3
 1.0.4
 : Removed "import execjs" (it prevent execution of setup.py by Python 2.6)
 1.0.3
