@@ -14,7 +14,7 @@ with io.open('README.md', encoding='ascii') as fp:
     long_description = fp.read()
 
 if sys.version_info < (2, 7):
-    install_requires = "unittest2 argparse ordereddict".split()
+    install_requires = "argparse ordereddict".split()
 else:
     install_requires = []
 
