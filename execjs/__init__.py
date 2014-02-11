@@ -405,7 +405,7 @@ for command in ["nodejs", "node"]:
         name = "Node.js (V8)",
         command = [command],
         encoding='UTF-8',
-        runner_source = r"""(function(program, execJS) { execJS(program) })(function(module, exports, require) { #{source}
+        runner_source = r"""(function(program, execJS) { execJS(program) })(function() { #{source}
 }, function(program) {
   var output;
   var print = function(string) {
