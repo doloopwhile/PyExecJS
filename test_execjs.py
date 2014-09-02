@@ -68,11 +68,6 @@ class RuntimeTestBase:
         self.assertIs(True, self.runtime.eval("this === (function() {return this})()"))
         self.assertIs(True, self.runtime.exec_("return this === (function() {return this})()"))
 
-    def test_commonjs_vars_are_undefined(self):
-        self.assertTrue(self.runtime.eval("typeof module == 'undefined'"))
-        self.assertTrue(self.runtime.eval("typeof exports == 'undefined'"))
-        self.assertTrue(self.runtime.eval("typeof require == 'undefined'"))
-
     def test_compile_large_scripts(self):
         body = "var foo = 'bar';\n" * (10 ** 4)
         code = "function foo() {\n" + body + "\n};\nreturn true"
