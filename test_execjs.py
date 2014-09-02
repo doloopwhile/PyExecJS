@@ -36,9 +36,9 @@ class RuntimeTestBase:
         self.assertIs(True, self.runtime.exec_("return true"))
         self.assertEqual("hello", self.runtime.exec_("return 'hello'"))
         self.assertEqual([1, 2], self.runtime.exec_("return [1, 2]"))
-        self.assertEqual({"a":1,"b":2}, self.runtime.exec_("return {a:1,b:2}"))
-        self.assertEqual("\u3042", self.runtime.exec_('return "\u3042"'))   #unicode char
-        self.assertEqual("\u3042", self.runtime.exec_(r'return "\u3042"'))  #unicode char by escape sequence
+        self.assertEqual({"a": 1, "b": 2}, self.runtime.exec_("return {a:1,b:2}"))
+        self.assertEqual("\u3042", self.runtime.exec_('return "\u3042"'))   # unicode char
+        self.assertEqual("\u3042", self.runtime.exec_(r'return "\u3042"'))  # unicode char by escape sequence
         self.assertEqual("\\", self.runtime.exec_('return "\\\\"'))
 
     def test_eval(self):
@@ -52,8 +52,8 @@ class RuntimeTestBase:
         self.assertEqual([1, None], self.runtime.eval("[1, function() {}]"))
         self.assertEqual("hello", self.runtime.eval("'hello'"))
         self.assertEqual(["red", "yellow", "blue"], self.runtime.eval("'red yellow blue'.split(' ')"))
-        self.assertEqual({"a":1,"b":2}, self.runtime.eval("{a:1, b:2}"))
-        self.assertEqual({"a":True}, self.runtime.eval("{a:true,b:function (){}}"))
+        self.assertEqual({"a": 1, "b": 2}, self.runtime.eval("{a:1, b:2}"))
+        self.assertEqual({"a": True}, self.runtime.eval("{a:true,b:function (){}}"))
         self.assertEqual("\u3042", self.runtime.eval('"\u3042"'))
         self.assertEqual("\u3042", self.runtime.eval(r'"\u3042"'))
         self.assertEqual(r"\\", self.runtime.eval(r'"\\\\"'))
@@ -74,7 +74,7 @@ class RuntimeTestBase:
         self.assertTrue(self.runtime.eval("typeof require == 'undefined'"))
 
     def test_compile_large_scripts(self):
-        body = "var foo = 'bar';\n" * 10**4
+        body = "var foo = 'bar';\n" * (10 ** 4)
         code = "function foo() {\n" + body + "\n};\nreturn true"
         self.assertTrue(self.runtime.exec_(code))
 
@@ -91,25 +91,33 @@ class ExecJSTest(unittest.TestCase, RuntimeTestBase):
     def setUp(self):
         self.runtime = execjs
 
+
 @unittest.FunctionTestCase
 def test_runtime_available(self):
-    runtime = execjs.ExternalRuntime(command=["nonexistent"],
-        name=None, runner_path=None)
-    
+    runtime = execjs.ExternalRuntime(
+        command=["nonexistent"],
+        name=None,
+        runner_path=None,
+    )
+
     self.assertFalse(runtime.is_available())
-    
-    runtime = execjs.ExternalRuntime(command=["python"],
-        name=None, runner_path=None)
+
+    runtime = execjs.ExternalRuntime(
+        command=["python"],
+        name=None,
+        runner_path=None,
+    )
     self.assertTrue(runtime.is_available())
     raise Exception
 
 for name, runtime in execjs.available_runtimes().items():
     class_name = name.capitalize() + "RuntimeTest"
+
     def f(runtime=runtime):
         class RuntimeTest(unittest.TestCase, RuntimeTestBase):
             def setUp(self):
                 self.runtime = runtime
-        RuntimeTest.__name__ = str(class_name) # 2.x compatibility
+        RuntimeTest.__name__ = str(class_name)  # 2.x compatibility
         return RuntimeTest
     exec("{class_name} = f()".format(class_name=class_name))
 
@@ -121,4 +129,3 @@ def load_tests(loader, tests, ignore):
 
 if __name__ == "__main__":
     unittest.main()
-
