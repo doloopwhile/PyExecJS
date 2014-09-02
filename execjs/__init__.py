@@ -229,10 +229,15 @@ class ExternalRuntime:
     def _execfile(self, filename):
         """protected"""
         cmd = self._binary() + [filename]
-        p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
-        stdoutdata, stderrdata = p.communicate()
-        ret = p.wait()
-        del p
+
+        p = None
+        try:
+            p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+            stdoutdata, stderrdata = p.communicate()
+            ret = p.wait()
+        finally:
+            del p
+
         if ret == 0:
             return stdoutdata
         else:
