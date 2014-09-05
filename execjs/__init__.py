@@ -248,16 +248,16 @@ class ExternalRuntime:
             self._runtime = runtime
             self._source = source
 
-        def eval(self, source, options={}):
+        def eval(self, source):
             if not source.strip():
                 data = "''"
             else:
                 data = "'('+" + json.dumps(source, ensure_ascii=True) + "+')'"
 
             code = 'return eval({data})'.format(data=data)
-            return self.exec_(code, options=options)
+            return self.exec_(code)
 
-        def exec_(self, source, options={}):
+        def exec_(self, source):
             if self._source:
                 source = self._source + '\n' + source
 
