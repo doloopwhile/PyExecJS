@@ -349,19 +349,19 @@ class PyV8Runtime:
         return "PyV8"
 
     def exec_(self, source):
-        return self.Context(self).exec_(source)
+        return self.Context().exec_(source)
 
     def eval(self, source):
-        return self.Context(self).eval(source)
+        return self.Context().eval(source)
 
     def compile(self, source):
-        return self.Context(self, source)
+        return self.Context(source)
 
     def is_available(self):
         return self._is_available
 
     class Context:
-        def __init__(self, runtime, source=""):
+        def __init__(self, source=""):
             self._source = source
 
         def exec_(self, source):
@@ -450,8 +450,6 @@ for command in ["nodejs", "node"]:
     if runtime.is_available():
         break
 
-del command
-del runtime
 
 _runtimes['JavaScriptCore'] = ExternalRuntime(
     name="JavaScriptCore",
