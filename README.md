@@ -63,9 +63,11 @@ Copyright (c) 2011 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
 
-#Changes
+# Changes
 1.0.5
 : Supported Python 3.3
+: Fixed file handle leaking
+: Fixed issue with passenger-nginx-4.0
 1.0.4
 : Removed "import execjs" (it prevent execution of setup.py by Python 2.6)
 1.0.3
