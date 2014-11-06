@@ -149,7 +149,7 @@ def _json2_source():
 
 
 def _find_executable(prog, pathext=("",)):
-    pathlist = os.environ['PATH'].split(os.pathsep)
+    pathlist = os.environ.get('PATH', '').split(os.pathsep)
 
     for dir in pathlist:
         for ext in pathext:
@@ -171,7 +171,7 @@ def _which(command):
     args = command[1:]
 
     if _is_windows():
-        path = _find_executable(name, os.environ["PATHEXT"].split(os.pathsep))
+        path = _find_executable(name, os.environ.get("PATHEXT", "").split(os.pathsep))
     else:
         path = _find_executable(name)
 

@@ -2,7 +2,7 @@
 #encoding: ascii
 from __future__ import unicode_literals
 import sys
-import io
+import os
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -115,6 +115,24 @@ for name, runtime in execjs.available_runtimes().items():
         RuntimeTest.__name__ = str(class_name)  # 2.x compatibility
         return RuntimeTest
     exec("{class_name} = f()".format(class_name=class_name))
+
+
+class CommonTest(unittest.TestCase):
+    def test_empty_path_environ(self):
+        """
+        Some version of passenger-nginx set PATH empty.
+        """
+        orig_path = os.environ['PATH']
+        try:
+            del os.environ['PATH']
+            ctx = execjs.compile("""
+                function add(x, y) {
+                    return x + y;
+                }
+            """)
+            ctx.call("add", 1, 2)
+        finally:
+            os.environ['PATH'] = orig_path
 
 
 def load_tests(loader, tests, ignore):
