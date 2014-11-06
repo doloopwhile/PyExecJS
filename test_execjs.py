@@ -82,28 +82,10 @@ class RuntimeTestBase:
             self.runtime.exec_("throw 'hello'")
 
 
-class ExecJSTest(unittest.TestCase, RuntimeTestBase):
+class DefaultRuntimeTest(unittest.TestCase, RuntimeTestBase):
     def setUp(self):
         self.runtime = execjs
 
-
-@unittest.FunctionTestCase
-def test_runtime_available(self):
-    runtime = execjs.ExternalRuntime(
-        command=["nonexistent"],
-        name=None,
-        runner_path=None,
-    )
-
-    self.assertFalse(runtime.is_available())
-
-    runtime = execjs.ExternalRuntime(
-        command=["python"],
-        name=None,
-        runner_path=None,
-    )
-    self.assertTrue(runtime.is_available())
-    raise Exception
 
 for name, runtime in execjs.available_runtimes().items():
     class_name = name.capitalize() + "RuntimeTest"
@@ -133,6 +115,12 @@ class CommonTest(unittest.TestCase):
             ctx.call("add", 1, 2)
         finally:
             os.environ['PATH'] = orig_path
+
+    def test_runtime_availability(self):
+        r = execjs.ExternalRuntime("fail", ["nonexistent"], "")
+        self.assertFalse(r.is_available())
+        r = execjs.ExternalRuntime("success", ["python"], "")
+        self.assertTrue(r.is_available())
 
 
 def load_tests(loader, tests, ignore):
