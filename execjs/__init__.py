@@ -533,3 +533,38 @@ _runtimes['JScript'] = ExternalRuntime(
 });
 """
 )
+
+
+for _name, _command in [
+    ['PhantomJS', 'phantomjs'],
+    ['SlimerJS', 'slimerjs'],
+]:
+    _runtimes[_name] = ExternalRuntime(
+        name=_name,
+        command=[_command],
+        runner_source=r"""
+(function(program, execJS) { execJS(program) })(function() {
+  return eval(#{encoded_source});
+}, function(program) {
+  var output;
+  var print = function(string) {
+    console.log('' + string);
+  };
+  try {
+    result = program();
+    print('')
+    if (typeof result == 'undefined' && result !== null) {
+      print('["ok"]');
+    } else {
+      try {
+        print(JSON.stringify(['ok', result]));
+      } catch (err) {
+        print('["err"]');
+      }
+    }
+  } catch (err) {
+    print(JSON.stringify(['err', '' + err]));
+  }
+});
+phantom.exit();
+""")
