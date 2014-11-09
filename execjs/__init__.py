@@ -506,13 +506,16 @@ _runtimes['SpiderMonkey'] = _runtimes['Spidermonkey'] = ExternalRuntime(
 
 _runtimes['JScript'] = ExternalRuntime(
     name="JScript",
-    command=["cscript", "//E:jscript", "//Nologo", "//U"],
-    encoding='UTF-16LE',  # CScript with //U returns UTF-16LE
+    command=["cscript", "//E:jscript", "//Nologo"],
+    encoding="ascii",
     runner_source=r"""(function(program, execJS) { execJS(program) })(function() {
   return eval(#{encoded_source});
 }, function(program) {
   #{json2_source}
   var output, print = function(string) {
+    string = string.replace(/[^\x00-\x7f]/g, function(ch){
+      return '\\u' + ('0000' + ch.charCodeAt(0).toString(16)).slice(-4);
+    });
     WScript.Echo(string);
   };
   try {
