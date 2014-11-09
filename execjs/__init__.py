@@ -24,6 +24,7 @@ from __future__ import unicode_literals, division, with_statement
 
 import os
 import os.path
+import re
 import stat
 import io
 import platform
@@ -280,19 +281,21 @@ class ExternalRuntime:
 
         def _compile(self, source):
             """protected"""
-            runner_source = self._runtime.runner_source().replace('#{source}', source)
+            runner_source = self._runtime.runner_source()
 
-            if runner_source.find('#{encoded_source}') >= 0:
-                encoded_source = json.dumps(
+            replacements = {
+                '#{source}': lambda: source,
+                '#{encoded_source}': lambda: json.dumps(
                     "(function(){ " +
                     encode_unicode_codepoints(source) +
                     " })()"
-                )
-                runner_source = runner_source.replace(
-                    '#{encoded_source}', encoded_source)
+                ),
+                '#{json2_source}': _json2_source,
+            }
 
-            if runner_source.find('#{json2_source}') >= 0:
-                runner_source = runner_source.replace('#{json2_source}', _json2_source())
+            pattern = "|".join(re.escape(k) for k in replacements)
+
+            runner_source = re.sub(pattern, lambda m: replacements[m.group(0)](), runner_source)
 
             return runner_source
 
