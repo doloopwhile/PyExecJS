@@ -379,13 +379,14 @@ class PyV8Runtime:
             import contextlib
             #backward compatibility
             with contextlib.nested(PyV8.JSContext(), PyV8.JSEngine()) as (ctxt, engine):
+                js_errors = (PyV8.JSError, IndexError, ReferenceError, SyntaxError, TypeError)
                 try:
                     script = engine.compile(source)
-                except PyV8.JSError as e:
+                except js_errors as e:
                     raise RuntimeError(e)
                 try:
                     value = script.run()
-                except PyV8.JSError as e:
+                except js_errors as e:
                     raise ProgramError(e)
                 return self.convert(value)
 
