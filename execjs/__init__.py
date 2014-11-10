@@ -327,15 +327,12 @@ def encode_unicode_codepoints(str):
     >>> encode_unicode_codepoints('\u4e16\u754c') == '\\u4e16\\u754c'
     True
     """
-    codepoint_format = '\\u{ord:04x}'.format
+    codepoint_format = '\\u{:04x}'.format
 
-    def codepoint(ch):
-        o = ord(ch)
-        if o in range(0x80):
-            return ch
-        else:
-            return codepoint_format(ord=o)
-    return ''.join(map(codepoint, str))
+    def codepoint(m):
+        return codepoint_format(ord(m.group(0)))
+
+    return re.sub('[^\x00-\x7f]', codepoint, str)
 
 
 class PyV8Runtime:
