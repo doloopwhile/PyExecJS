@@ -109,7 +109,7 @@ def _auto_detect():
 def get_from_environment():
     '''
         Return the JavaScript runtime that is specified in EXECJS_RUNTIME environment variable.
-        If EXECJS_RUNTIME environment variable is empty of invalid, return None.
+        If EXECJS_RUNTIME environment variable is empty or invalid, return None.
     '''
     try:
         name = os.environ["EXECJS_RUNTIME"]
