@@ -81,6 +81,10 @@ class RuntimeTestBase:
         with self.assertRaises(execjs.ProgramError):
             self.runtime.exec_("throw 'hello'")
 
+    def test_broken_substitutions(self):
+        s = '#{source}#{encoded_source}#{json2_source}'
+        self.assertEqual(s, self.runtime.eval('"{}"'.format(s)))
+
 
 class DefaultRuntimeTest(unittest.TestCase, RuntimeTestBase):
     def setUp(self):

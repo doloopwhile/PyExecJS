@@ -24,6 +24,7 @@ from __future__ import unicode_literals, division, with_statement
 
 import os
 import os.path
+import re
 import stat
 import io
 import platform
@@ -108,7 +109,7 @@ def _auto_detect():
 def get_from_environment():
     '''
         Return the JavaScript runtime that is specified in EXECJS_RUNTIME environment variable.
-        If EXECJS_RUNTIME environment variable is empty of invalid, return None.
+        If EXECJS_RUNTIME environment variable is empty or invalid, return None.
     '''
     try:
         name = os.environ["EXECJS_RUNTIME"]
@@ -280,19 +281,21 @@ class ExternalRuntime:
 
         def _compile(self, source):
             """protected"""
-            runner_source = self._runtime.runner_source().replace('#{source}', source)
+            runner_source = self._runtime.runner_source()
 
-            if runner_source.find('#{encoded_source}') >= 0:
-                encoded_source = json.dumps(
+            replacements = {
+                '#{source}': lambda: source,
+                '#{encoded_source}': lambda: json.dumps(
                     "(function(){ " +
                     encode_unicode_codepoints(source) +
                     " })()"
-                )
-                runner_source = runner_source.replace(
-                    '#{encoded_source}', encoded_source)
+                ),
+                '#{json2_source}': _json2_source,
+            }
 
-            if runner_source.find('#{json2_source}') >= 0:
-                runner_source = runner_source.replace('#{json2_source}', _json2_source())
+            pattern = "|".join(re.escape(k) for k in replacements)
+
+            runner_source = re.sub(pattern, lambda m: replacements[m.group(0)](), runner_source)
 
             return runner_source
 
@@ -324,15 +327,12 @@ def encode_unicode_codepoints(str):
     >>> encode_unicode_codepoints('\u4e16\u754c') == '\\u4e16\\u754c'
     True
     """
-    codepoint_format = '\\u{ord:04x}'.format
+    codepoint_format = '\\u{:04x}'.format
 
-    def codepoint(ch):
-        o = ord(ch)
-        if o in range(0x80):
-            return ch
-        else:
-            return codepoint_format(ord=o)
-    return ''.join(map(codepoint, str))
+    def codepoint(m):
+        return codepoint_format(ord(m.group(0)))
+
+    return re.sub('[^\x00-\x7f]', codepoint, str)
 
 
 class PyV8Runtime:
@@ -379,13 +379,14 @@ class PyV8Runtime:
             import contextlib
             #backward compatibility
             with contextlib.nested(PyV8.JSContext(), PyV8.JSEngine()) as (ctxt, engine):
+                js_errors = (PyV8.JSError, IndexError, ReferenceError, SyntaxError, TypeError)
                 try:
                     script = engine.compile(source)
-                except PyV8.JSError as e:
+                except js_errors as e:
                     raise RuntimeError(e)
                 try:
                     value = script.run()
-                except PyV8.JSError as e:
+                except js_errors as e:
                     raise ProgramError(e)
                 return self.convert(value)
 
@@ -506,13 +507,16 @@ _runtimes['SpiderMonkey'] = _runtimes['Spidermonkey'] = ExternalRuntime(
 
 _runtimes['JScript'] = ExternalRuntime(
     name="JScript",
-    command=["cscript", "//E:jscript", "//Nologo", "//U"],
-    encoding='UTF-16LE',  # CScript with //U returns UTF-16LE
+    command=["cscript", "//E:jscript", "//Nologo"],
+    encoding="ascii",
     runner_source=r"""(function(program, execJS) { execJS(program) })(function() {
   return eval(#{encoded_source});
 }, function(program) {
   #{json2_source}
   var output, print = function(string) {
+    string = string.replace(/[^\x00-\x7f]/g, function(ch){
+      return '\\u' + ('0000' + ch.charCodeAt(0).toString(16)).slice(-4);
+    });
     WScript.Echo(string);
   };
   try {
@@ -533,3 +537,38 @@ _runtimes['JScript'] = ExternalRuntime(
 });
 """
 )
+
+
+for _name, _command in [
+    ['PhantomJS', 'phantomjs'],
+    ['SlimerJS', 'slimerjs'],
+]:
+    _runtimes[_name] = ExternalRuntime(
+        name=_name,
+        command=[_command],
+        runner_source=r"""
+(function(program, execJS) { execJS(program) })(function() {
+  return eval(#{encoded_source});
+}, function(program) {
+  var output;
+  var print = function(string) {
+    console.log('' + string);
+  };
+  try {
+    result = program();
+    print('')
+    if (typeof result == 'undefined' && result !== null) {
+      print('["ok"]');
+    } else {
+      try {
+        print(JSON.stringify(['ok', result]));
+      } catch (err) {
+        print('["err"]');
+      }
+    }
+  } catch (err) {
+    print(JSON.stringify(['err', '' + err]));
+  }
+});
+phantom.exit();
+""")
