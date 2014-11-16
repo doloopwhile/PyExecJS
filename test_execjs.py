@@ -83,7 +83,7 @@ class RuntimeTestBase:
 
     def test_broken_substitutions(self):
         s = '#{source}#{encoded_source}#{json2_source}'
-        self.assertEqual(s, self.runtime.eval('"{}"'.format(s)))
+        self.assertEqual(s, self.runtime.eval('"' + s + '"'))
 
 
 class DefaultRuntimeTest(unittest.TestCase, RuntimeTestBase):

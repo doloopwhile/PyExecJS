@@ -1,0 +1,26 @@
+language: python
+
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+
+env:
+ - "SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH"
+
+before_script:
+  - "sh -e /etc/init.d/xvfb start"
+  - "echo 'Installing Slimer'"
+  - "wget http://download.slimerjs.org/releases/0.9.3/slimerjs-0.9.3-linux-x86_64.tar.bz2"
+  - "tar xvf slimerjs-*.tar.bz2"
+  - "rm slimerjs-*.tar.bz2"
+  - "mv slimerjs-* slimerjs"
+
+install:
+  - "./install_development.sh"
+  - "python setup.py install"
+
+script:
+  - "python setup.py test"
