@@ -1,5 +1,7 @@
 PyExecJS
 ========
+[![Build Status](https://travis-ci.org/doloopwhile/PyExecJS.svg?branch=travis-ci)](https://travis-ci.org/doloopwhile/PyExecJS)
+
 Run JavaScript code from Python.
 
 PyExecJS is a porting of ExecJS from Ruby.
