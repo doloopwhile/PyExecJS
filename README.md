@@ -66,6 +66,12 @@ Copyright (c) 2011 Sam Stephenson and Josh Peek.
 Released under the MIT license. See `LICENSE` for details.
 
 # Changes
+## 1.1.0
+- Supported Python 3.4
+- Supported SlimerJS as runtime
+- Supported PhantomJS as runtime
+- Fixed JScript runtime on Windows 8
+
 ## 1.0.5
 - Supported Python 3.3
 - Fixed file handle leaking
