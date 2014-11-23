@@ -1,5 +1,5 @@
-#!python3
-#encoding:ascii
+#!/usr/bin/env python3
+# -*- coding: ascii -*-
 from __future__ import division, with_statement
 version = '1.0.5'
 author = "Omoto Kenji"

@@ -1,5 +1,5 @@
-#!python3
-#encoding: ascii
+#!/usr/bin/env python3
+# -*- coding: ascii -*-
 from __future__ import unicode_literals, division, with_statement
 '''
     Run JavaScript code from Python.
