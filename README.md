@@ -47,7 +47,8 @@ PyExecJS supports these runtimes:
 * Apple JavaScriptCore - Included with Mac OS X
 * [Mozilla SpiderMonkey](http://www.mozilla.org/js/spidermonkey/)
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
-
+* [SlimerJS](http://slimerjs.org/)
+* [PhantomJS](http://phantomjs.org/)
 
 # Installation
 

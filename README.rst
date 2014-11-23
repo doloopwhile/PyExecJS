@@ -56,6 +56,8 @@ PyExecJS supports these runtimes:
 -  `Microsoft Windows Script
    Host <http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx>`__
    (JScript)
+-  `SlimerJS <http://slimerjs.org/>`__
+-  `PhantomJS <http://phantomjs.org/>`__
 
 Installation
 ============
