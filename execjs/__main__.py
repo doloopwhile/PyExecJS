@@ -1,5 +1,5 @@
-#!python3
-#encoding: ascii
+#!/usr/bin/env python3
+# -*- coding: ascii -*-
 import sys
 import io
 from argparse import ArgumentParser, Action, SUPPRESS
