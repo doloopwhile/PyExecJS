@@ -22,6 +22,7 @@ from __future__ import unicode_literals, division, with_statement
 3
 '''
 
+import sys
 import os
 import os.path
 import re
@@ -31,6 +32,9 @@ import platform
 import tempfile
 from subprocess import Popen, PIPE, STDOUT
 import json
+
+import six
+
 import execjs._json2
 
 try:
@@ -143,9 +147,14 @@ def _is_windows():
     return platform.system() == 'Windows'
 
 
+def _decode_if_not_text(s):
+    if isinstance(s, six.text_type):
+        return s
+    return s.decode(sys.getfilesystemencoding())
+
 
 def _find_executable(prog, pathext=("",)):
-    pathlist = os.environ.get('PATH', '').split(os.pathsep)
+    pathlist = _decode_if_not_text(os.environ.get('PATH', '')).split(os.pathsep)
 
     for dir in pathlist:
         for ext in pathext:
@@ -167,7 +176,8 @@ def _which(command):
     args = command[1:]
 
     if _is_windows():
-        path = _find_executable(name, os.environ.get("PATHEXT", "").split(os.pathsep))
+        pathext = _decode_if_not_text(os.environ.get("PATHEXT", ""))
+        path = _find_executable(name, pathext.split(os.pathsep))
     else:
         path = _find_executable(name)
 

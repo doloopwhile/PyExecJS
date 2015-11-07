@@ -13,10 +13,9 @@ import io
 with io.open('README.rst', encoding='ascii') as fp:
     long_description = fp.read()
 
+install_requires = ["six"]
 if sys.version_info < (2, 7):
     install_requires = "argparse ordereddict".split()
-else:
-    install_requires = []
 
 setup(
     packages=find_packages(),
