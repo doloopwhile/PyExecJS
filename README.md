@@ -5,8 +5,7 @@ PyExecJS
 Run JavaScript code from Python.
 
 PyExecJS is a porting of ExecJS from Ruby.
-PyExecJS automatically picks the best runtime available to evaluate your JavaScript program,
-then returns the result to you as a Python object.
+PyExecJS **automatically** picks the best runtime available to evaluate your JavaScript program.
 
 A short example:
 
@@ -21,24 +20,23 @@ A short example:
     >>> ctx.call("add", 1, 2)
     3
 
-Of course, you can pick particular JavaScript runtime by get() function:
+The pros of PyExecJS is that you do not need take care of JavaScript environment.
+Especially, it works in Windows environment without installing extra libraries.
 
-    >>> default = execjs.get() # the automatically picked runtime
-    >>> default.eval("1 + 2")
-    3
-    >>> jscript = execjs.get("JScript")
-    >>> jscript.eval("1 + 2")
-    3
-    >>> node = execjs.get("Node")
-    >>> node.eval("1 + 2")
-    3
+One of cons of PyExecJS is performance. PyExecJS communicate JavaScript runtime by text and it is slow.
+The other cons is that it does not fully support runtime specific features.
 
-If EXECJS_RUNTIME environment variable is specified, PyExecJS pick the JavaScript runtime as a default:
+[PyV8](https://code.google.com/p/pyv8/) might be better choice for some use case.
 
-    >>> #execjs.get().name # this value is depends on your environment.
-    >>> os.environ["EXECJS_RUNTIME"] = "Node"
-    >>> execjs.get().name
-    'Node.js (V8)'
+# Installation
+
+    $ pip install PyExecJS
+
+or
+
+    $ easy_install PyExecJS
+
+# Details
 
 PyExecJS supports these runtimes:
 
@@ -50,14 +48,25 @@ PyExecJS supports these runtimes:
 * [SlimerJS](http://slimerjs.org/)
 * [PhantomJS](http://phantomjs.org/)
 
-# Installation
 
-    $ pip install PyExecJS
+If `EXECJS_RUNTIME` environment variable is specified, PyExecJS pick the JavaScript runtime as a default:
 
-or
+    >>> execjs.get().name # this value is depends on your environment.
+    >>> os.environ["EXECJS_RUNTIME"] = "Node"
+    >>> execjs.get().name
+    'Node.js (V8)'
 
-    $ easy_install PyExecJS
+You can choose JavaScript runtime by `execjs.get()`:
 
+    >>> default = execjs.get() # the automatically picked runtime
+    >>> default.eval("1 + 2")
+    3
+    >>> jscript = execjs.get("JScript")
+    >>> jscript.eval("1 + 2")
+    3
+    >>> node = execjs.get("Node")
+    >>> node.eval("1 + 2")
+    3
 
 # License
 
