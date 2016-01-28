@@ -4,13 +4,20 @@ from __future__ import unicode_literals
 import sys
 import os
 
+import doctest
+import execjs
+import execjs.external_runtime
+import execjs.pyv8runtime
+import execjs.unavailable_runtime
+import execjs._json2
+import execjs._misc
+import execjs._runner_sources
+import execjs._runtimes
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
     import unittest
-
-import doctest
-import execjs
 
 
 class RuntimeTestBase:
