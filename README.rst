@@ -60,13 +60,15 @@ PyExecJS supports these runtimes:
    (JScript)
 -  `SlimerJS <http://slimerjs.org/>`__
 -  `PhantomJS <http://phantomjs.org/>`__
+-  `Nashorn <http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16>`__
+   - Included with Oracle Java 8
 
 If ``EXECJS_RUNTIME`` environment variable is specified, PyExecJS pick
 the JavaScript runtime as a default:
 
 ::
 
-    >>> #execjs.get().name # this value is depends on your environment.
+    >>> execjs.get().name # this value is depends on your environment.
     >>> os.environ["EXECJS_RUNTIME"] = "Node"
     >>> execjs.get().name
     'Node.js (V8)'

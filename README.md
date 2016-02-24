@@ -47,6 +47,7 @@ PyExecJS supports these runtimes:
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
 * [SlimerJS](http://slimerjs.org/)
 * [PhantomJS](http://phantomjs.org/)
+* [Nashorn](http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16) - Included with Oracle Java 8
 
 
 If `EXECJS_RUNTIME` environment variable is specified, PyExecJS pick the JavaScript runtime as a default:
