@@ -1,4 +1,4 @@
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
 import io
 import json
 import os
@@ -67,7 +67,7 @@ class ExternalRuntime:
 
         p = None
         try:
-            p = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdoutdata, stderrdata = p.communicate()
             ret = p.wait()
         finally:
@@ -76,7 +76,7 @@ class ExternalRuntime:
         if ret == 0:
             return stdoutdata
         else:
-            raise execjs.RuntimeError(stdoutdata)
+            raise execjs.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
 
     class Context:
         def __init__(self, runtime, source=''):
