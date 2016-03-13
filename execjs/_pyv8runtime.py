@@ -21,15 +21,15 @@ class PyV8Runtime(abstract_runtime.AbstructRuntime):
     def name(self):
         return "PyV8"
 
-    def _exec_(self, source):
+    def _exec_(self, source, cwd=None):
         """protected"""
         return self.Context().exec_(source)
 
-    def _eval(self, source):
+    def _eval(self, source, cwd=None):
         """protected"""
         return self.Context().eval(source)
 
-    def _compile(self, source):
+    def _compile(self, source, cwd=None):
         """protected"""
         return self.Context(source)
 

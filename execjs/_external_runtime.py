@@ -42,17 +42,17 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
     def is_available(self):
         return self._available
 
-    def _exec_(self, source):
+    def _exec_(self, source, cwd=None):
         """protected"""
-        return self.Context(self).exec_(source)
+        return self.Context(self, cwd=cwd).exec_(source)
 
-    def _eval(self, source):
+    def _eval(self, source, cwd=None):
         """protected"""
-        return self.Context(self).eval(source)
+        return self.Context(self, cwd=cwd).eval(source)
 
-    def _compile(self, source):
+    def _compile(self, source, cwd=None):
         """protected"""
-        return self.Context(self, source)
+        return self.Context(self, source, cwd=cwd)
 
     def _binary(self):
         """protected"""
@@ -62,9 +62,10 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
 
     class Context:
         """protected"""
-        def __init__(self, runtime, source=''):
+        def __init__(self, runtime, source='', cwd=None):
             self._runtime = runtime
             self._source = source
+            self._cwd = cwd
 
         def eval(self, source):
             if not source.strip():
@@ -100,7 +101,7 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
 
             p = None
             try:
-                p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+                p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self._cwd)
                 stdoutdata, stderrdata = p.communicate()
                 ret = p.wait()
             finally:
