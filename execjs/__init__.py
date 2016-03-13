@@ -23,8 +23,8 @@ A short example:
 from __future__ import unicode_literals, division, with_statement
 
 import execjs._runtimes
-import execjs.external_runtime
-ExternalRuntime = execjs.external_runtime.ExternalRuntime
+import execjs._external_runtime as external_runtime
+ExternalRuntime = external_runtime.ExternalRuntime
 
 
 __all__ = """

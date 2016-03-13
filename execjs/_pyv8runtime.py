@@ -2,7 +2,7 @@ import json
 import contextlib
 
 import execjs
-import execjs.unavailable_runtime
+import execjs._abstract_runtime as abstract_runtime
 from execjs._misc import encode_unicode_codepoints
 
 try:
@@ -13,28 +13,32 @@ else:
     _pyv8_available = True
 
 
-class PyV8Runtime:
+class PyV8Runtime(abstract_runtime.AbstructRuntime):
     def __init__(self):
-        if not _pyv8_available:
-            self.__class__ = execjs.unavailable_runtime.UnavailableRuntime
+        pass
 
     @property
     def name(self):
         return "PyV8"
 
-    def exec_(self, source):
+    def _exec_(self, source):
+        """protected"""
         return self.Context().exec_(source)
 
-    def eval(self, source):
+    def _eval(self, source):
+        """protected"""
         return self.Context().eval(source)
 
-    def compile(self, source):
+    def _compile(self, source):
+        """protected"""
         return self.Context(source)
 
     def is_available(self):
-        return True
+        return _pyv8_available
 
     class Context:
+        """protected"""
+
         def __init__(self, source=""):
             self._source = source
 
