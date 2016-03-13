@@ -19,14 +19,13 @@ from execjs._misc import encode_unicode_codepoints
 
 
 class ExternalRuntime:
-    def __init__(self, name, command, runner_source, encoding='utf8', raw_result=False):
+    def __init__(self, name, command, runner_source, encoding='utf8'):
         self._name = name
         if isinstance(command, str):
             command = [command]
         self._command = command
         self._runner_source = runner_source
         self._encoding = encoding
-        self._raw_result = raw_result
 
         if self._binary() is None:
             self.__class__ = execjs.unavailable_runtime.UnavailableRuntime
@@ -106,11 +105,9 @@ class ExternalRuntime:
             finally:
                 os.remove(filename)
 
-            if not self._runtime._raw_result:
-                output = output.decode(self._runtime._encoding)
-                output = output.replace("\r\n", "\n").replace("\r", "\n")
-                output = self._extract_result(output.split("\n")[-2])
-            return output
+            output = output.decode(self._runtime._encoding)
+            output = output.replace("\r\n", "\n").replace("\r", "\n")
+            return self._extract_result(output.split("\n")[-2])
 
         def call(self, identifier, *args):
             args = json.dumps(args)
