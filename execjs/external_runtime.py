@@ -12,13 +12,13 @@ import tempfile
 import six
 
 import execjs
-import execjs.unavailable_runtime
+import execjs._abstract_runtime as abstract_runtime
 import execjs._json2 as _json2
 import execjs._runner_sources as _runner_sources
 from execjs._misc import encode_unicode_codepoints
 
 
-class ExternalRuntime:
+class ExternalRuntime(abstract_runtime.AbstructRuntime):
     def __init__(self, name, command, runner_source, encoding='utf8'):
         self._name = name
         if isinstance(command, str):
@@ -27,8 +27,7 @@ class ExternalRuntime:
         self._runner_source = runner_source
         self._encoding = encoding
 
-        if self._binary() is None:
-            self.__class__ = execjs.unavailable_runtime.UnavailableRuntime
+        self._available = self._binary() is not None
 
     def __str__(self):
         return "{class_name}({runtime_name})".format(
@@ -40,20 +39,20 @@ class ExternalRuntime:
     def name(self):
         return self._name
 
-    def exec_(self, source):
+    def is_available(self):
+        return self._available
+
+    def _exec_(self, source):
+        """protected"""
         return self.Context(self).exec_(source)
 
-    def eval(self, source):
+    def _eval(self, source):
+        """protected"""
         return self.Context(self).eval(source)
 
-    def compile(self, source):
+    def _compile(self, source):
+        """protected"""
         return self.Context(self, source)
-
-    def is_available(self):
-        return True
-
-    def runner_source(self):
-        return self._runner_source
 
     def _binary(self):
         """protected"""
@@ -61,24 +60,8 @@ class ExternalRuntime:
             self._binary_cache = _which(self._command)
         return self._binary_cache
 
-    def _execfile(self, filename):
-        """protected"""
-        cmd = self._binary() + [filename]
-
-        p = None
-        try:
-            p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-            stdoutdata, stderrdata = p.communicate()
-            ret = p.wait()
-        finally:
-            del p
-
-        if ret == 0:
-            return stdoutdata
-        else:
-            raise execjs.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
-
     class Context:
+        """protected"""
         def __init__(self, runtime, source=''):
             self._runtime = runtime
             self._source = source
@@ -101,7 +84,7 @@ class ExternalRuntime:
             try:
                 with io.open(filename, "w+", encoding=self._runtime._encoding) as fp:
                     fp.write(self._compile(source))
-                output = self._runtime._execfile(filename)
+                output = self._execfile(filename)
             finally:
                 os.remove(filename)
 
@@ -111,9 +94,26 @@ class ExternalRuntime:
             args = json.dumps(args)
             return self.eval("{identifier}.apply(this, {args})".format(identifier=identifier, args=args))
 
+        def _execfile(self, filename):
+            """protected"""
+            cmd = self._runtime._binary() + [filename]
+
+            p = None
+            try:
+                p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+                stdoutdata, stderrdata = p.communicate()
+                ret = p.wait()
+            finally:
+                del p
+
+            if ret == 0:
+                return stdoutdata
+            else:
+                raise execjs.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
+
         def _compile(self, source):
             """protected"""
-            runner_source = self._runtime.runner_source()
+            runner_source = self._runtime._runner_source
 
             replacements = {
                 '#{source}': lambda: source,
@@ -154,16 +154,19 @@ class ExternalRuntime:
 
 
 def _is_windows():
+    """protected"""
     return platform.system() == 'Windows'
 
 
 def _decode_if_not_text(s):
+    """protected"""
     if isinstance(s, six.text_type):
         return s
     return s.decode(sys.getfilesystemencoding())
 
 
 def _find_executable(prog, pathext=("",)):
+    """protected"""
     pathlist = _decode_if_not_text(os.environ.get('PATH', '')).split(os.pathsep)
 
     for dir in pathlist:
@@ -179,6 +182,7 @@ def _find_executable(prog, pathext=("",)):
 
 
 def _which(command):
+    """protected"""
     if isinstance(command, str):
         command = [command]
     command = list(command)
