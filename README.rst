@@ -90,13 +90,20 @@ You can choose JavaScript runtime by ``execjs.get()``:
 License
 =======
 
-Copyright (c) 2012 Omoto Kenji. Copyright (c) 2011 Sam Stephenson and
-Josh Peek.
+Copyright (c) 2016 Omoto Kenji. Copyright (c) 2011 Sam Stephenson and
+Josh Peek. (As a author of ExecJS)
 
 Released under the MIT license. See ``LICENSE`` for details.
 
 Changes
 =======
+
+1.2.0
+-----
+
+-  Supported Python 3.5
+-  Supported Nashorn(Java 8 JavaScript engine) as runtime
+-  Dropped support for Python 2.6 and 3.2
 
 1.1.0
 -----
