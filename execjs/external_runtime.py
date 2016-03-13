@@ -105,9 +105,7 @@ class ExternalRuntime:
             finally:
                 os.remove(filename)
 
-            output = output.decode(self._runtime._encoding)
-            output = output.replace("\r\n", "\n").replace("\r", "\n")
-            return self._extract_result(output.split("\n")[-2])
+            return self._extract_result(output)
 
         def call(self, identifier, *args):
             args = json.dumps(args)
@@ -133,8 +131,12 @@ class ExternalRuntime:
 
             return runner_source
 
-        def _extract_result(self, output_last_line):
+        def _extract_result(self, output):
             """protected"""
+            output = output.decode(self._runtime._encoding)
+            output = output.replace("\r\n", "\n").replace("\r", "\n")
+            output_last_line = output.split("\n")[-2]
+
             if not output_last_line:
                 status = value = None
             else:
