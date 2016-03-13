@@ -23,6 +23,7 @@ before_script:
   - "tar xvf slimerjs-*.tar.bz2"
   - "rm slimerjs-*.tar.bz2"
   - "mv slimerjs-* slimerjs"
+  - "sudo apt-get install oracle-java8-installer"
 
 install:
   - "./install_development.sh"
@@ -30,4 +31,5 @@ install:
 
 script:
   - "slimerjs --version"
+  - "jjs -v < /dev/null"
   - "python setup.py test"
