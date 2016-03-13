@@ -21,16 +21,21 @@ A short example:
     >>> ctx.call("add", 1, 2)
     3
 
-The pros of PyExecJS is that you do not need take care of JavaScript
-environment. Especially, it works in Windows environment without
-installing extra libraries.
+Supported runtimes
+==================
 
-One of cons of PyExecJS is performance. PyExecJS communicate JavaScript
-runtime by text and it is slow. The other cons is that it does not fully
-support runtime specific features.
-
-`PyV8 <https://code.google.com/p/pyv8/>`__ might be better choice for
-some use case.
+-  `PyV8 <http://code.google.com/p/pyv8/>`__ - A python wrapper for
+   Google V8 engine,
+-  `Node.js <http://nodejs.org/>`__
+-  Apple JavaScriptCore - Included with Mac OS X
+-  `Mozilla SpiderMonkey <http://www.mozilla.org/js/spidermonkey/>`__
+-  `Microsoft Windows Script
+   Host <http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx>`__
+   (JScript)
+-  `SlimerJS <http://slimerjs.org/>`__
+-  `PhantomJS <http://phantomjs.org/>`__
+-  `Nashorn <http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16>`__
+   - Included with Oracle Java 8
 
 Installation
 ============
@@ -47,21 +52,6 @@ or
 
 Details
 =======
-
-PyExecJS supports these runtimes:
-
--  `PyV8 <http://code.google.com/p/pyv8/>`__ - A python wrapper for
-   Google V8 engine,
--  `Node.js <http://nodejs.org/>`__
--  Apple JavaScriptCore - Included with Mac OS X
--  `Mozilla SpiderMonkey <http://www.mozilla.org/js/spidermonkey/>`__
--  `Microsoft Windows Script
-   Host <http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx>`__
-   (JScript)
--  `SlimerJS <http://slimerjs.org/>`__
--  `PhantomJS <http://phantomjs.org/>`__
--  `Nashorn <http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16>`__
-   - Included with Oracle Java 8
 
 If ``EXECJS_RUNTIME`` environment variable is specified, PyExecJS pick
 the JavaScript runtime as a default:
@@ -87,6 +77,17 @@ You can choose JavaScript runtime by ``execjs.get()``:
     >>> node.eval("1 + 2")
     3
 
+The pros of PyExecJS is that you do not need take care of JavaScript
+environment. Especially, it works in Windows environment without
+installing extra libraries.
+
+One of cons of PyExecJS is performance. PyExecJS communicate JavaScript
+runtime by text and it is slow. The other cons is that it does not fully
+support runtime specific features.
+
+`PyV8 <https://code.google.com/p/pyv8/>`__ might be better choice for
+some use case.
+
 License
 =======
 
@@ -95,8 +96,8 @@ Josh Peek. (As a author of ExecJS)
 
 Released under the MIT license. See ``LICENSE`` for details.
 
-Changes
-=======
+Changelog
+=========
 
 1.2.0
 -----
