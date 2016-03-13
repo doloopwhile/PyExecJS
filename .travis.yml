@@ -11,21 +11,10 @@ env:
     - "SLIMERJSLAUNCHER=$(which firefox)"
     - "DISPLAY=:99.0"
     - "PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH"
+    - "JDK=oracle8"
 
-matrix:
-  include:
-    - python: "2.7"
-      env: JDK=oracle8
-      addons:
-        apt:
-          packages:
-            - oracle-java8-installer
-    - python: "3.4"
-      env: JDK=oracle8
-      addons:
-        apt:
-          packages:
-            - oracle-java8-installer
+jdk:
+  - oraclejdk8
 
 before_script:
   - "sh -e /etc/init.d/xvfb start"
