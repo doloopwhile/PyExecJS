@@ -20,25 +20,7 @@ A short example:
     >>> ctx.call("add", 1, 2)
     3
 
-The pros of PyExecJS is that you do not need take care of JavaScript environment.
-Especially, it works in Windows environment without installing extra libraries.
-
-One of cons of PyExecJS is performance. PyExecJS communicate JavaScript runtime by text and it is slow.
-The other cons is that it does not fully support runtime specific features.
-
-[PyV8](https://code.google.com/p/pyv8/) might be better choice for some use case.
-
-# Installation
-
-    $ pip install PyExecJS
-
-or
-
-    $ easy_install PyExecJS
-
-# Details
-
-PyExecJS supports these runtimes:
+# Supported runtimes
 
 * [PyV8](http://code.google.com/p/pyv8/) - A python wrapper for Google V8 engine,
 * [Node.js](http://nodejs.org/)
@@ -49,6 +31,15 @@ PyExecJS supports these runtimes:
 * [PhantomJS](http://phantomjs.org/)
 * [Nashorn](http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16) - Included with Oracle Java 8
 
+# Installation
+
+    $ pip install PyExecJS
+
+or
+
+    $ easy_install PyExecJS
+
+# Details
 
 If `EXECJS_RUNTIME` environment variable is specified, PyExecJS pick the JavaScript runtime as a default:
 
@@ -69,14 +60,28 @@ You can choose JavaScript runtime by `execjs.get()`:
     >>> node.eval("1 + 2")
     3
 
+The pros of PyExecJS is that you do not need take care of JavaScript environment.
+Especially, it works in Windows environment without installing extra libraries.
+
+One of cons of PyExecJS is performance. PyExecJS communicate JavaScript runtime by text and it is slow.
+The other cons is that it does not fully support runtime specific features.
+
+[PyV8](https://code.google.com/p/pyv8/) might be better choice for some use case.
+
 # License
 
-Copyright (c) 2012 Omoto Kenji.
-Copyright (c) 2011 Sam Stephenson and Josh Peek.
+Copyright (c) 2016 Omoto Kenji.
+Copyright (c) 2011 Sam Stephenson and Josh Peek. (As a author of ExecJS)
 
 Released under the MIT license. See `LICENSE` for details.
 
-# Changes
+# Changelog
+
+## 1.2.0
+- Supported Python 3.5
+- Supported Nashorn(Java 8 JavaScript engine) as runtime
+- Dropped support for Python 2.6 and 3.2
+
 ## 1.1.0
 - Supported Python 3.4
 - Supported SlimerJS as runtime

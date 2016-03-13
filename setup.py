@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: ascii -*-
 from __future__ import division, with_statement
-version = '1.1.0'
+from setuptools import setup, find_packages
+import sys
+import io
+
+version = '1.2.0'
 author = "Omoto Kenji"
 license = "MIT License"
 author_email = 'doloopwhile@gmail.com'
 
-from setuptools import setup, find_packages
-import sys
-import io
 
 with io.open('README.rst', encoding='ascii') as fp:
     long_description = fp.read()
@@ -35,12 +36,11 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: JavaScript',
     ],
     install_requires=install_requires,
