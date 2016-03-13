@@ -3,8 +3,9 @@
 from __future__ import unicode_literals
 import sys
 import os
-
 import doctest
+import six
+
 import execjs
 import execjs.external_runtime
 import execjs.pyv8runtime
@@ -135,7 +136,8 @@ class CommonTest(unittest.TestCase):
 
 
 def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite(execjs))
+    if six.PY3:
+        tests.addTests(doctest.DocTestSuite(execjs))
     return tests
 
 
