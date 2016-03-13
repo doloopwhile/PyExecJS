@@ -19,7 +19,7 @@ jdk:
 before_script:
   - "sh -e /etc/init.d/xvfb start"
   - "echo 'Installing Slimer'"
-  - "wget http://download.slimerjs.org/releases/0.9.3/slimerjs-0.9.3-linux-x86_64.tar.bz2"
+  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
   - "tar xvf slimerjs-*.tar.bz2"
   - "rm slimerjs-*.tar.bz2"
   - "mv slimerjs-* slimerjs"
@@ -29,4 +29,5 @@ install:
   - "python setup.py install"
 
 script:
+  - "slimerjs --version"
   - "python setup.py test"
