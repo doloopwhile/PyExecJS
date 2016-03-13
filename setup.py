@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 import sys
 import io
 
-version = '1.2.0'
+version = '1.3.0'
 author = "Omoto Kenji"
 license = "MIT License"
 author_email = 'doloopwhile@gmail.com'

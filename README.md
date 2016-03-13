@@ -77,6 +77,9 @@ Released under the MIT license. See `LICENSE` for details.
 
 # Changelog
 
+## 1.3.0
+- Added `cwd` argument.
+
 ## 1.2.0
 - Supported Python 3.5
 - Supported Nashorn(Java 8 JavaScript engine) as runtime
