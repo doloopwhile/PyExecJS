@@ -6,8 +6,8 @@ except ImportError:
     from ordereddict import OrderedDict
 
 import execjs
-import execjs.external_runtime as external_runtime
-import execjs.pyv8runtime as pyv8runtime
+import execjs._external_runtime as external_runtime
+import execjs._pyv8runtime as pyv8runtime
 
 
 def register(name, runtime):
