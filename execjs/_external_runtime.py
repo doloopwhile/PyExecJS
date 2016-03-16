@@ -11,10 +11,10 @@ import tempfile
 
 import six
 
-import execjs
 import execjs._abstract_runtime as abstract_runtime
 import execjs._json2 as _json2
 import execjs._runner_sources as _runner_sources
+import execjs._exceptions as exceptions
 from execjs._misc import encode_unicode_codepoints
 
 
@@ -110,7 +110,7 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
             if ret == 0:
                 return stdoutdata
             else:
-                raise execjs.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
+                raise exceptions.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
 
         def _compile(self, source):
             """protected"""
@@ -149,9 +149,9 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
             if status == "ok":
                 return value
             elif value.startswith('SyntaxError:'):
-                raise execjs.RuntimeError(value)
+                raise exceptions.RuntimeError(value)
             else:
-                raise execjs.ProgramError(value)
+                raise exceptions.ProgramError(value)
 
 
 def _is_windows():

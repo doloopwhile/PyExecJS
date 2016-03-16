@@ -1,20 +1,20 @@
-import execjs
+import execjs._exceptions as exceptions
 
 
 class AbstructRuntime:
     def exec_(self, source, cwd=None):
         if not self.is_available():
-            raise execjs.RuntimeUnavailableError
+            raise exceptions.RuntimeUnavailableError
         return self._exec_(source, cwd=cwd)
 
     def eval(self, source, cwd=None):
         if not self.is_available():
-            raise execjs.RuntimeUnavailableError
+            raise exceptions.RuntimeUnavailableError
         return self._eval(source, cwd=cwd)
 
     def compile(self, source, cwd=None):
         if not self.is_available():
-            raise execjs.RuntimeUnavailableError
+            raise exceptions.RuntimeUnavailableError
         return self._compile(source, cwd=cwd)
 
     def is_available(self):
