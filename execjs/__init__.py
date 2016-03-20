@@ -24,8 +24,8 @@ from __future__ import unicode_literals, division, with_statement
 
 from execjs._exceptions import Error, RuntimeError, ProgramError, RuntimeUnavailableError
 import execjs._runtimes
-import execjs._external_runtime as external_runtime
-ExternalRuntime = external_runtime.ExternalRuntime
+from execjs._external_runtime import ExternalRuntime
+from execjs._abstract_runtime import AbstractRuntime
 
 
 __all__ = """
@@ -44,11 +44,14 @@ get_from_environment = execjs._runtimes.get_from_environment
 
 def eval(source):
     return get().eval(source)
+eval.__doc__= AbstractRuntime.eval.__doc__
 
 
 def exec_(source):
     return get().exec_(source)
+exec_.__doc__= AbstractRuntime.exec_.__doc__
 
 
 def compile(source):
     return get().compile(source)
+compile.__doc__= AbstractRuntime.compile.__doc__

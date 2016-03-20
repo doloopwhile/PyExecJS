@@ -8,17 +8,17 @@ import re
 import stat
 import sys
 import tempfile
-
 import six
-
-import execjs._abstract_runtime as abstract_runtime
 import execjs._json2 as _json2
 import execjs._runner_sources as _runner_sources
 import execjs._exceptions as exceptions
+from execjs._abstract_runtime import AbstractRuntime
+from execjs._abstract_runtime_context import AbstractRuntimeContext
 from execjs._misc import encode_unicode_codepoints
 
 
-class ExternalRuntime(abstract_runtime.AbstructRuntime):
+class ExternalRuntime(AbstractRuntime):
+    '''Runtime to execute codes with external command.'''
     def __init__(self, name, command, runner_source, encoding='utf8'):
         self._name = name
         if isinstance(command, str):
@@ -42,32 +42,26 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
     def is_available(self):
         return self._available
 
-    def _exec_(self, source, cwd=None):
-        """protected"""
-        return self.Context(self, cwd=cwd).exec_(source)
-
-    def _eval(self, source, cwd=None):
-        """protected"""
-        return self.Context(self, cwd=cwd).eval(source)
-
     def _compile(self, source, cwd=None):
-        """protected"""
         return self.Context(self, source, cwd=cwd)
 
     def _binary(self):
-        """protected"""
         if not hasattr(self, "_binary_cache"):
             self._binary_cache = _which(self._command)
         return self._binary_cache
 
-    class Context:
-        """protected"""
+    class Context(AbstractRuntimeContext):
+        # protected
+
         def __init__(self, runtime, source='', cwd=None):
             self._runtime = runtime
             self._source = source
             self._cwd = cwd
 
-        def eval(self, source):
+        def is_available(self):
+            return self._runtime.is_available()
+
+        def _eval(self, source):
             if not source.strip():
                 data = "''"
             else:
@@ -76,7 +70,7 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
             code = 'return eval({data})'.format(data=data)
             return self.exec_(code)
 
-        def exec_(self, source):
+        def _exec_(self, source):
             if self._source:
                 source = self._source + '\n' + source
 
@@ -91,12 +85,11 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
 
             return self._extract_result(output)
 
-        def call(self, identifier, *args):
+        def _call(self, identifier, *args):
             args = json.dumps(args)
             return self.eval("{identifier}.apply(this, {args})".format(identifier=identifier, args=args))
 
         def _execfile(self, filename):
-            """protected"""
             cmd = self._runtime._binary() + [filename]
 
             p = None
@@ -113,7 +106,6 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
                 raise exceptions.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
 
         def _compile(self, source):
-            """protected"""
             runner_source = self._runtime._runner_source
 
             replacements = {
@@ -133,7 +125,6 @@ class ExternalRuntime(abstract_runtime.AbstructRuntime):
             return runner_source
 
         def _extract_result(self, output):
-            """protected"""
             output = output.decode(self._runtime._encoding)
             output = output.replace("\r\n", "\n").replace("\r", "\n")
             output_last_line = output.split("\n")[-2]

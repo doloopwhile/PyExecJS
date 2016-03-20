@@ -1,8 +1,9 @@
 import json
 import contextlib
 
-import execjs._abstract_runtime as abstract_runtime
 import execjs._exceptions as exceptions
+from execjs._abstract_runtime import AbstractRuntime
+from execjs._abstract_runtime_context import AbstractRuntimeContext
 from execjs._misc import encode_unicode_codepoints
 
 try:
@@ -13,7 +14,8 @@ else:
     _pyv8_available = True
 
 
-class PyV8Runtime(abstract_runtime.AbstructRuntime):
+class PyV8Runtime(AbstractRuntime):
+    '''Runtime to execute codes with PyV8.'''
     def __init__(self):
         pass
 
@@ -21,28 +23,20 @@ class PyV8Runtime(abstract_runtime.AbstructRuntime):
     def name(self):
         return "PyV8"
 
-    def _exec_(self, source, cwd=None):
-        """protected"""
-        return self.Context().exec_(source)
-
-    def _eval(self, source, cwd=None):
-        """protected"""
-        return self.Context().eval(source)
-
     def _compile(self, source, cwd=None):
-        """protected"""
         return self.Context(source)
 
     def is_available(self):
         return _pyv8_available
 
-    class Context:
-        """protected"""
-
+    class Context(AbstractRuntimeContext):
         def __init__(self, source=""):
             self._source = source
 
-        def exec_(self, source):
+        def is_available(self):
+            return _pyv8_available
+
+        def _exec_(self, source):
             source = '''\
             (function() {{
                 {0};
@@ -66,10 +60,10 @@ class PyV8Runtime(abstract_runtime.AbstructRuntime):
                     raise exceptions.ProgramError(e)
                 return self.convert(value)
 
-        def eval(self, source):
+        def _eval(self, source):
             return self.exec_('return ' + encode_unicode_codepoints(source))
 
-        def call(self, identifier, *args):
+        def _call(self, identifier, *args):
             args = json.dumps(args)
             return self.eval("{identifier}.apply(this, {args})".format(identifier=identifier, args=args))
 
