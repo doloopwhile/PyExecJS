@@ -12,27 +12,23 @@ class AbstractRuntime(object):
         '''Execute source by JavaScript runtime and return all output to stdout as a string.
 
         source -- JavaScript code to execute.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
+        cwd -- Directory where call JavaScript runtime. It may be ignored in some derived class.
         '''
-        if not self.is_available():
-            raise execjs.RuntimeUnavailableError
-        return self._exec_(source, cwd=cwd)
+        return self.compile('', cwd=cwd).exec_(source)
 
     def eval(self, source, cwd=None):
         '''Evaluate source in JavaScript runtime.
 
         source -- JavaScript code to evaluate.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
+        cwd -- Directory where call JavaScript runtime. It may be ignored in some derived class.
         '''
-        if not self.is_available():
-            raise execjs.RuntimeUnavailableError
-        return self._eval(source, cwd=cwd)
+        return self.compile('', cwd=cwd).eval(source)
 
     def compile(self, source, cwd=None):
         '''Bulk source as a context object. The source can be used to execute another code.
 
         source -- JavaScript code to bulk.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
+        cwd -- Directory where call JavaScript runtime. It may be ignored in some derived class.
         '''
         if not self.is_available():
             raise execjs.RuntimeUnavailableError
@@ -43,13 +39,5 @@ class AbstractRuntime(object):
         raise NotImplementedError
 
     @abstractmethod
-    def _exec_(self, source, cwd=None):
-        raise NotImplementedError
-
-    @abstractmethod
     def _compile(self, source, cwd=None):
-        raise NotImplementedError
-
-    @abstractmethod
-    def _eval(self, source, cwd=None):
         raise NotImplementedError

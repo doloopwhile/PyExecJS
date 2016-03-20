@@ -23,12 +23,6 @@ class PyV8Runtime(AbstractRuntime):
     def name(self):
         return "PyV8"
 
-    def _exec_(self, source, cwd=None):
-        return self.Context().exec_(source)
-
-    def _eval(self, source, cwd=None):
-        return self.Context().eval(source)
-
     def _compile(self, source, cwd=None):
         return self.Context(source)
 

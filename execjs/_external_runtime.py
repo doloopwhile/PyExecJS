@@ -44,12 +44,6 @@ class ExternalRuntime(AbstractRuntime):
     def is_available(self):
         return self._available
 
-    def _exec_(self, source, cwd=None):
-        return self.Context(self, cwd=cwd).exec_(source)
-
-    def _eval(self, source, cwd=None):
-        return self.Context(self, cwd=cwd).eval(source)
-
     def _compile(self, source, cwd=None):
         return self.Context(self, source, cwd=cwd)
 
