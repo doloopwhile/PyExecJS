@@ -8,14 +8,12 @@ import re
 import stat
 import sys
 import tempfile
-
 import six
-
-import execjs
-from execjs._abstract_runtime import AbstractRuntime
-from execjs._abstract_runtime_context import AbstractRuntimeContext
 import execjs._json2 as _json2
 import execjs._runner_sources as _runner_sources
+import execjs._exceptions as exceptions
+from execjs._abstract_runtime import AbstractRuntime
+from execjs._abstract_runtime_context import AbstractRuntimeContext
 from execjs._misc import encode_unicode_codepoints
 
 
@@ -105,7 +103,7 @@ class ExternalRuntime(AbstractRuntime):
             if ret == 0:
                 return stdoutdata
             else:
-                raise execjs.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
+                raise exceptions.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
 
         def _compile(self, source):
             runner_source = self._runtime._runner_source
@@ -142,9 +140,9 @@ class ExternalRuntime(AbstractRuntime):
             if status == "ok":
                 return value
             elif value.startswith('SyntaxError:'):
-                raise execjs.RuntimeError(value)
+                raise exceptions.RuntimeError(value)
             else:
-                raise execjs.ProgramError(value)
+                raise exceptions.ProgramError(value)
 
 
 def _is_windows():

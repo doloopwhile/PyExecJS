@@ -1,6 +1,6 @@
-import execjs
 from abc import ABCMeta, abstractmethod
 import six
+import execjs._exceptions as exceptions
 
 
 @six.add_metaclass(ABCMeta)
@@ -31,7 +31,7 @@ class AbstractRuntime(object):
         cwd -- Directory where call JavaScript runtime. It may be ignored in some derived class.
         '''
         if not self.is_available():
-            raise execjs.RuntimeUnavailableError
+            raise exceptions.RuntimeUnavailableError
         return self._compile(source, cwd=cwd)
 
     @abstractmethod
