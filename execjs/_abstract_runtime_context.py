@@ -4,52 +4,50 @@ import six
 
 
 @six.add_metaclass(ABCMeta)
-class AbstractRuntime(object):
+class AbstractRuntimeContext(object):
     '''
-    Abstract base class for runtime class.
+    Abstract base class for runtime context class.
     '''
-    def exec_(self, source, cwd=None):
+    def exec_(self, source):
         '''Execute source by JavaScript runtime and return all output to stdout as a string.
 
         source -- JavaScript code to execute.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
         '''
         if not self.is_available():
             raise execjs.RuntimeUnavailableError
-        return self._exec_(source, cwd=cwd)
+        return self._exec_(source)
 
-    def eval(self, source, cwd=None):
+    def eval(self, source):
         '''Evaluate source in JavaScript runtime.
 
         source -- JavaScript code to evaluate.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
         '''
         if not self.is_available():
             raise execjs.RuntimeUnavailableError
-        return self._eval(source, cwd=cwd)
+        return self._eval(source)
 
-    def compile(self, source, cwd=None):
-        '''Bulk source as a context object. The source can be used to execute another code.
+    def call(self, name, *args):
+        '''Call a JavaScript function in context.
 
-        source -- JavaScript code to bulk.
-        cwd -- Directory where call JavaScript runtime. It may be ignored for some runtime.
+        name -- Name of funtion object to call
+        args -- Arguments for the funtion object
         '''
         if not self.is_available():
             raise execjs.RuntimeUnavailableError
-        return self._compile(source, cwd=cwd)
+        return self._call(name, *args)
 
     @abstractmethod
     def is_available(self):
         raise NotImplementedError
 
     @abstractmethod
-    def _exec_(self, source, cwd=None):
+    def _exec_(self, source):
         raise NotImplementedError
 
     @abstractmethod
-    def _compile(self, source, cwd=None):
+    def _eval(self, source):
         raise NotImplementedError
 
     @abstractmethod
-    def _eval(self, source, cwd=None):
+    def _call(self, name, *args):
         raise NotImplementedError
