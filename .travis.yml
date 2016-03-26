@@ -33,3 +33,4 @@ script:
   - "slimerjs --version"
   - "jjs -v < /dev/null"
   - "python setup.py test"
+  - "python -m execjs --print-available-runtimes"
