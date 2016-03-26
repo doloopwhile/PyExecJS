@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: ascii -*-
+from __future__ import unicode_literals
 import sys
 import io
 from argparse import ArgumentParser, Action, SUPPRESS

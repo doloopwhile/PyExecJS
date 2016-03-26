@@ -127,6 +127,10 @@ class CommonTest(unittest.TestCase):
         r = execjs.ExternalRuntime("success", ["python"], "")
         self.assertTrue(r.is_available())
 
+    def test_attributes_export(self):
+        for name in execjs.__all__:
+            self.assertTrue(hasattr(execjs, name), "{} is not defined".format(name))
+
 
 def load_tests(loader, tests, ignore):
     if six.PY3:
