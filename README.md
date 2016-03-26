@@ -77,6 +77,9 @@ Released under the MIT license. See `LICENSE` for details.
 
 # Changelog
 
+## 1.3.1
+- Fixed `--print-available-runtimes` fails in Python 2.7.
+
 ## 1.3.0
 - Added `cwd` argument.
 
