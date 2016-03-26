@@ -201,7 +201,7 @@ jsc = ExternalRuntime(
     runner_source=_runner_sources.JavaScriptCore
 )
 
-spidermonkey = ExternalRuntime(name="SpiderMonkey", command=["js"], runner_source=_runner_sources.SpiderMonkey)
+spidermonkey = ExternalRuntime(name="SpiderMonkey", command=["js"], runner_source=_runner_sources.SpiderMonkey, encoding="utf-8")
 
 jscript = ExternalRuntime(
     name="JScript",

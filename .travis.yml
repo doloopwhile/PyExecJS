@@ -23,7 +23,7 @@ before_script:
   - "tar xvf slimerjs-*.tar.bz2"
   - "rm slimerjs-*.tar.bz2"
   - "mv slimerjs-* slimerjs"
-  - "sudo apt-get install oracle-java8-installer"
+  - "sudo apt-get install oracle-java8-installer libmozjs-24-bin"
 
 install:
   - "./install_development.sh"
