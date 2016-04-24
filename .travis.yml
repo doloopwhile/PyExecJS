@@ -16,16 +16,14 @@ env:
 jdk:
   - oraclejdk8
 
-before_script:
+install:
   - "sh -e /etc/init.d/xvfb start"
   - "echo 'Installing Slimer'"
   - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
   - "tar xvf slimerjs-*.tar.bz2"
   - "rm slimerjs-*.tar.bz2"
   - "mv slimerjs-* slimerjs"
-  - "sudo apt-get install oracle-java8-installer"
-
-install:
+  - "sudo apt-get install -y oracle-java8-installer phantomjs"
   - "./install_development.sh"
   - "python setup.py install"
 
