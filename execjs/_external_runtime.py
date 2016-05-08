@@ -19,13 +19,14 @@ from execjs._misc import encode_unicode_codepoints
 
 class ExternalRuntime(AbstractRuntime):
     '''Runtime to execute codes with external command.'''
-    def __init__(self, name, command, runner_source, encoding='utf8'):
+    def __init__(self, name, command, runner_source, encoding='utf8', tempfile=False):
         self._name = name
         if isinstance(command, str):
             command = [command]
         self._command = command
         self._runner_source = runner_source
         self._encoding = encoding
+        self._tempfile = tempfile
 
         self._available = self._binary() is not None
 
@@ -43,7 +44,7 @@ class ExternalRuntime(AbstractRuntime):
         return self._available
 
     def _compile(self, source, cwd=None):
-        return self.Context(self, source, cwd=cwd)
+        return self.Context(self, source, cwd=cwd, tempfile=tempfile)
 
     def _binary(self):
         if not hasattr(self, "_binary_cache"):
@@ -53,10 +54,11 @@ class ExternalRuntime(AbstractRuntime):
     class Context(AbstractRuntimeContext):
         # protected
 
-        def __init__(self, runtime, source='', cwd=None):
+        def __init__(self, runtime, source='', cwd=None, tempfile=False):
             self._runtime = runtime
             self._source = source
             self._cwd = cwd
+            self._tempfile = tempfile
 
         def is_available(self):
             return self._runtime.is_available()
@@ -74,35 +76,53 @@ class ExternalRuntime(AbstractRuntime):
             if self._source:
                 source = self._source + '\n' + source
 
+            if self._tempfile:
+                output = self._exec_with_tempfile(source)
+            else:
+                output = self._exec_with_pipe(source)
+            return self._extract_result(output)
+
+        def _call(self, identifier, *args):
+            args = json.dumps(args)
+            return self._eval("{identifier}.apply(this, {args})".format(identifier=identifier, args=args))
+
+        def _exec_with_pipe(self, source):
+            cmd = self._runtime._binary()
+
+            p = None
+            try:
+                p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=self._cwd, universal_newlines=True)
+                stdoutdata, stderrdata = p.communicate(input=source)
+                ret = p.wait()
+            finally:
+                del p
+
+            self._fail_on_non_zero_status(ret, stdoutdata, stderrdata)
+            return stdoutdata
+
+        def _exec_with_tempfile(self, source):
             (fd, filename) = tempfile.mkstemp(prefix='execjs', suffix='.js')
             os.close(fd)
             try:
                 with io.open(filename, "w+", encoding=self._runtime._encoding) as fp:
                     fp.write(self._compile(source))
-                output = self._execfile(filename)
+                cmd = self._runtime._binary() + [filename]
+
+                p = None
+                try:
+                    p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self._cwd)
+                    stdoutdata, stderrdata = p.communicate()
+                    ret = p.wait()
+                finally:
+                    del p
+
+                self._fail_on_non_zero_status(ret, stdoutdata, stderrdata)
+                return stdoutdata
             finally:
                 os.remove(filename)
 
-            return self._extract_result(output)
-
-        def _call(self, identifier, *args):
-            args = json.dumps(args)
-            return self.eval("{identifier}.apply(this, {args})".format(identifier=identifier, args=args))
-
-        def _execfile(self, filename):
-            cmd = self._runtime._binary() + [filename]
-
-            p = None
-            try:
-                p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self._cwd)
-                stdoutdata, stderrdata = p.communicate()
-                ret = p.wait()
-            finally:
-                del p
-
-            if ret == 0:
-                return stdoutdata
-            else:
+        def _fail_on_non_zero_status(self, status, stdoutdata, stderrdata):
+            if status != 0:
                 raise exceptions.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
 
         def _compile(self, source):
