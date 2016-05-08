@@ -53,10 +53,12 @@ You can choose JavaScript runtime by `execjs.get()`:
     >>> default = execjs.get() # the automatically picked runtime
     >>> default.eval("1 + 2")
     3
-    >>> jscript = execjs.get("JScript")
+    >>> import execjs.runtime_names
+    >>> jscript = execjs.get(execjs.runtime_names.JScript)
     >>> jscript.eval("1 + 2")
     3
-    >>> node = execjs.get("Node")
+    >>> import execjs.runtime_names
+    >>> node = execjs.get(execjs.runtime_names.Node)
     >>> node.eval("1 + 2")
     3
 

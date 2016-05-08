@@ -19,11 +19,8 @@ class PrintRuntimes(Action):
         )
 
     def __call__(self, parser, namespace, values, option_string=None):
-        buffer = io.StringIO()
-        for name, runtime in sorted(execjs.runtimes().items()):
-            if runtime.is_available():
-                buffer.write(name + "\n")
-        parser.exit(message=buffer.getvalue())
+        message = "".join(name + "\n" for name, runtime in execjs.runtimes().items() if runtime.is_available())
+        parser.exit(message=message)
 
 
 def main():
