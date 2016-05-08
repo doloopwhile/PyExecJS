@@ -258,7 +258,8 @@ def jscript():
         name="JScript",
         command=["cscript", "//E:jscript", "//Nologo"],
         encoding="ascii",
-        runner_source=_runner_sources.JScript
+        runner_source=_runner_sources.JScript,
+        tempfile=True
     )
 
 
