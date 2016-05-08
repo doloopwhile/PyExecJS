@@ -38,7 +38,6 @@ __all__ = """
 register = execjs._runtimes.register
 get = execjs._runtimes.get
 runtimes = execjs._runtimes.runtimes
-available_runtimes = execjs._runtimes.available_runtimes
 get_from_environment = execjs._runtimes.get_from_environment
 
 

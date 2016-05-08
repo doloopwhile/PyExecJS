@@ -1,4 +1,5 @@
 import os.path
+from collections import OrderedDict
 
 import execjs.runtime_names as runtime_names
 import execjs._external_runtime as external_runtime
@@ -23,12 +24,7 @@ def get(name=None):
 
 def runtimes():
     """return a dictionary of all supported JavaScript runtimes."""
-    return dict(_runtimes)
-
-
-def available_runtimes():
-    """return a dictionary of all supported JavaScript runtimes which is usable"""
-    return dict((name, runtime) for name, runtime in _runtimes if runtime.is_available())
+    return OrderedDict(_runtimes)
 
 
 def get_from_environment():

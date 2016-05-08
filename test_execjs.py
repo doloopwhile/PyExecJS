@@ -92,7 +92,9 @@ class DefaultRuntimeTest(unittest.TestCase, RuntimeTestBase):
         self.runtime = execjs
 
 
-for name, runtime in execjs.available_runtimes().items():
+for name, runtime in execjs.runtimes().items():
+    if not runtime.is_available():
+        continue
     class_name = name.capitalize() + "RuntimeTest"
 
     def f(runtime=runtime):
