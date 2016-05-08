@@ -64,16 +64,11 @@ def _find_runtime_by_name(name):
 
 _runtimes = []
 
-register(runtime_names.PyV8, pyv8runtime.PyV8Runtime())
-
-if external_runtime.node.is_available():
-    register(runtime_names.Node, external_runtime.node)
-else:
-    register(runtime_names.Node, external_runtime.nodejs)
-
-register(runtime_names.JavaScriptCore, external_runtime.jsc)
-register(runtime_names.SpiderMonkey,   external_runtime.spidermonkey)
-register(runtime_names.JScript,        external_runtime.jscript)
-register(runtime_names.PhantomJS,      external_runtime.phantomjs)
-register(runtime_names.SlimerJS,       external_runtime.slimerjs)
-register(runtime_names.Nashorn,        external_runtime.nashorn)
+register(runtime_names.PyV8,           pyv8runtime.PyV8Runtime())
+register(runtime_names.Node,           external_runtime.node())
+register(runtime_names.JavaScriptCore, external_runtime.jsc())
+register(runtime_names.SpiderMonkey,   external_runtime.spidermonkey())
+register(runtime_names.JScript,        external_runtime.jscript())
+register(runtime_names.PhantomJS,      external_runtime.phantomjs())
+register(runtime_names.SlimerJS,       external_runtime.slimerjs())
+register(runtime_names.Nashorn,        external_runtime.nashorn())

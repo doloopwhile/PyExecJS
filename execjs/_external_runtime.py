@@ -192,24 +192,75 @@ def _which(command):
     return [path] + args
 
 
-node = ExternalRuntime(name="Node.js (V8)", command=['node'], encoding='UTF-8', runner_source=_runner_sources.Node)
-nodejs = ExternalRuntime(name="Node.js (V8)", command=['nodejs'], encoding='UTF-8', runner_source=_runner_sources.Node)
+def node():
+    r = node_node()
+    if r.is_available():
+        return r
+    return node_nodejs()
 
-jsc = ExternalRuntime(
-    name="JavaScriptCore",
-    command=["/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"],
-    runner_source=_runner_sources.JavaScriptCore
-)
 
-spidermonkey = ExternalRuntime(name="SpiderMonkey", command=["js"], runner_source=_runner_sources.SpiderMonkey)
+def node_node():
+    return ExternalRuntime(
+        name="Node.js (V8)",
+        command=['node'],
+        encoding='UTF-8',
+        runner_source=_runner_sources.Node
+    )
 
-jscript = ExternalRuntime(
-    name="JScript",
-    command=["cscript", "//E:jscript", "//Nologo"],
-    encoding="ascii",
-    runner_source=_runner_sources.JScript
-)
 
-phantomjs = ExternalRuntime(name="PhantomJS", command=["phantomjs"], runner_source=_runner_sources.PhantomJS)
-slimerjs = ExternalRuntime(name="SlimerJS", command=["slimerjs"], runner_source=_runner_sources.SlimerJS)
-nashorn = ExternalRuntime(name="Nashorn", command=["jjs"], runner_source=_runner_sources.Nashorn)
+def node_nodejs():
+    return ExternalRuntime(
+        name="Node.js (V8)",
+        command=['nodejs'],
+        encoding='UTF-8',
+        runner_source=_runner_sources.Node
+    )
+
+
+def jsc():
+    return ExternalRuntime(
+        name="JavaScriptCore",
+        command=["/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"],
+        runner_source=_runner_sources.JavaScriptCore
+    )
+
+
+def spidermonkey():
+    return ExternalRuntime(
+        name="SpiderMonkey",
+        command=["js"],
+        runner_source=_runner_sources.SpiderMonkey
+    )
+
+
+def jscript():
+    return ExternalRuntime(
+        name="JScript",
+        command=["cscript", "//E:jscript", "//Nologo"],
+        encoding="ascii",
+        runner_source=_runner_sources.JScript
+    )
+
+
+def phantomjs():
+    return ExternalRuntime(
+        name="PhantomJS",
+        command=["phantomjs"],
+        runner_source=_runner_sources.PhantomJS
+    )
+
+
+def slimerjs():
+    return ExternalRuntime(
+        name="SlimerJS",
+        command=["slimerjs"],
+        runner_source=_runner_sources.SlimerJS
+    )
+
+
+def nashorn():
+    return ExternalRuntime(
+        name="Nashorn",
+        command=["jjs"],
+        runner_source=_runner_sources.Nashorn
+    )
