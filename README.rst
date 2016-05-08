@@ -70,10 +70,12 @@ You can choose JavaScript runtime by ``execjs.get()``:
     >>> default = execjs.get() # the automatically picked runtime
     >>> default.eval("1 + 2")
     3
-    >>> jscript = execjs.get("JScript")
+    >>> import execjs.runtime_names
+    >>> jscript = execjs.get(execjs.runtime_names.JScript)
     >>> jscript.eval("1 + 2")
     3
-    >>> node = execjs.get("Node")
+    >>> import execjs.runtime_names
+    >>> node = execjs.get(execjs.runtime_names.Node)
     >>> node.eval("1 + 2")
     3
 
@@ -98,6 +100,19 @@ Released under the MIT license. See ``LICENSE`` for details.
 
 Changelog
 =========
+
+1.4.0
+-----
+
+-  Fixed required libraries.
+-  Fixed order of output of ``--print-available-runtimes``.
+-  Execute some JavaScript runtime with pipe/stdin (without temporary
+   file).
+
+1.3.1
+-----
+
+-  Fixed ``--print-available-runtimes`` fails in Python 2.7.
 
 1.3.0
 -----
@@ -152,4 +167,3 @@ Changelog
 -----
 
 -  First release.
-
