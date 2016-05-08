@@ -1,3 +1,4 @@
+dist: trusty
 language: python
 
 python:
@@ -23,12 +24,15 @@ install:
   - "tar xvf slimerjs-*.tar.bz2"
   - "rm slimerjs-*.tar.bz2"
   - "mv slimerjs-* slimerjs"
-  - "sudo apt-get install -y oracle-java8-installer phantomjs"
+  - "sudo apt-get install -y oracle-java8-installer phantomjs libmozjs-24-bin"
+  - "sudo ln -s /usr/bin/js24 /usr/bin/js"
   - "./install_development.sh"
   - "python setup.py install"
 
 script:
   - "slimerjs --version"
   - "jjs -v < /dev/null"
-  - "python setup.py test"
+  - "js --help"
+  - "node --version && node --help"
   - "python -m execjs --print-available-runtimes"
+  - "python setup.py test"
