@@ -79,6 +79,11 @@ Released under the MIT license. See `LICENSE` for details.
 
 # Changelog
 
+## 1.4.0
+- Fixed required libraries.
+- Fixed order of output of `--print-available-runtimes`.
+- Execute some JavaScript runtime with pipe/stdin (without temporary file).
+
 ## 1.3.1
 - Fixed `--print-available-runtimes` fails in Python 2.7.
 
