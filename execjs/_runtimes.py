@@ -1,6 +1,6 @@
 import os.path
-from collections import OrderedDict
 
+import execjs.runtime_names as runtime_names
 import execjs._external_runtime as external_runtime
 import execjs._pyv8runtime as pyv8runtime
 import execjs._exceptions as exceptions
@@ -8,7 +8,7 @@ import execjs._exceptions as exceptions
 
 def register(name, runtime):
     '''Register a JavaScript runtime.'''
-    _runtimes[name] = runtime
+    _runtimes.append((name, runtime))
 
 
 def get(name=None):
@@ -17,17 +17,8 @@ def get(name=None):
     If name is specified, return the runtime.
     """
     if name is None:
-        return _auto_detect()
-
-    try:
-        runtime = runtimes()[name]
-    except KeyError:
-        raise exceptions.RuntimeUnavailableError("{name} runtime is not defined".format(name=name))
-    else:
-        if not runtime.is_available():
-            raise exceptions.RuntimeUnavailableError(
-                "{name} runtime is not available on this system".format(name=runtime.name))
-        return runtime
+        return get_from_environment() or _find_available_runtime()
+    return _find_runtime_by_name(name)
 
 
 def runtimes():
@@ -37,19 +28,7 @@ def runtimes():
 
 def available_runtimes():
     """return a dictionary of all supported JavaScript runtimes which is usable"""
-    return dict((name, runtime) for name, runtime in _runtimes.items() if runtime.is_available())
-
-
-def _auto_detect():
-    runtime = get_from_environment()
-    if runtime is not None:
-        return runtime
-
-    for runtime in _runtimes.values():
-        if runtime.is_available():
-            return runtime
-
-    raise exceptions.RuntimeUnavailableError("Could not find a JavaScript runtime.")
+    return dict((name, runtime) for name, runtime in _runtimes if runtime.is_available())
 
 
 def get_from_environment():
@@ -57,29 +36,48 @@ def get_from_environment():
         Return the JavaScript runtime that is specified in EXECJS_RUNTIME environment variable.
         If EXECJS_RUNTIME environment variable is empty or invalid, return None.
     '''
-    try:
-        name = os.environ["EXECJS_RUNTIME"]
-    except KeyError:
-        return None
-
+    name = os.environ.get("EXECJS_RUNTIME", "")
     if not name:
         return None
-    return get(name)
+
+    try:
+        return _find_runtime_by_name(name)
+    except exceptions.RuntimeUnavailableError:
+        return None
 
 
-_runtimes = OrderedDict()
+def _find_available_runtime():
+    for _, runtime in _runtimes:
+        if runtime.is_available():
+            return runtime
+    raise exceptions.RuntimeUnavailableError("Could not find an available JavaScript runtime.")
 
-register('PyV8', pyv8runtime.PyV8Runtime())
+
+def _find_runtime_by_name(name):
+    for runtime_name, runtime in _runtimes:
+        if runtime_name.lower() == name.lower():
+            break
+    else:
+        raise exceptions.RuntimeUnavailableError("{name} runtime is not defined".format(name=name))
+
+    if not runtime.is_available():
+        raise exceptions.RuntimeUnavailableError(
+            "{name} runtime is not available on this system".format(name=runtime.name))
+    return runtime
+
+
+_runtimes = []
+
+register(runtime_names.PyV8, pyv8runtime.PyV8Runtime())
 
 if external_runtime.node.is_available():
-    register("Node", external_runtime.node)
+    register(runtime_names.Node, external_runtime.node)
 else:
-    register("Node", external_runtime.nodejs)
+    register(runtime_names.Node, external_runtime.nodejs)
 
-register('JavaScriptCore', external_runtime.jsc)
-register('SpiderMonkey', external_runtime.spidermonkey)
-register('Spidermonkey', external_runtime.spidermonkey)
-register('JScript', external_runtime.jscript)
-register("PhantomJS", external_runtime.phantomjs)
-register("SlimerJS", external_runtime.slimerjs)
-register('Nashorn', external_runtime.nashorn)
+register(runtime_names.JavaScriptCore, external_runtime.jsc)
+register(runtime_names.SpiderMonkey,   external_runtime.spidermonkey)
+register(runtime_names.JScript,        external_runtime.jscript)
+register(runtime_names.PhantomJS,      external_runtime.phantomjs)
+register(runtime_names.SlimerJS,       external_runtime.slimerjs)
+register(runtime_names.Nashorn,        external_runtime.nashorn)
