@@ -14,10 +14,6 @@ author_email = 'doloopwhile@gmail.com'
 with io.open('README.rst', encoding='ascii') as fp:
     long_description = fp.read()
 
-install_requires = ["six"]
-if sys.version_info < (2, 7):
-    install_requires = "argparse ordereddict".split()
-
 setup(
     packages=find_packages(),
     include_package_data=True,
@@ -43,6 +39,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: JavaScript',
     ],
-    install_requires=install_requires,
+    install_requires=["six==1.10.0"],
     test_suite="test_execjs",
 )

@@ -1,9 +1,5 @@
 import os.path
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
+from collections import OrderedDict
 
 import execjs._external_runtime as external_runtime
 import execjs._pyv8runtime as pyv8runtime
