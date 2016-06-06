@@ -101,6 +101,13 @@ Released under the MIT license. See ``LICENSE`` for details.
 Changelog
 =========
 
+1.4.1
+-----
+
+-  Fixed arguments of module-level functions.
+-  Fixed bug of execution with pipe.
+-  Fixed wrong excption is raised.
+
 1.4.0
 -----
 
