@@ -44,7 +44,7 @@ class ExternalRuntime(AbstractRuntime):
         return self._available
 
     def _compile(self, source, cwd=None):
-        return self.Context(self, source, cwd=cwd, tempfile=tempfile)
+        return self.Context(self, source, cwd=cwd, tempfile=self._tempfile)
 
     def _binary(self):
         if not hasattr(self, "_binary_cache"):
@@ -92,7 +92,10 @@ class ExternalRuntime(AbstractRuntime):
             p = None
             try:
                 p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=self._cwd, universal_newlines=True)
-                stdoutdata, stderrdata = p.communicate(input=source)
+                input = self._compile(source)
+                if six.PY2:
+                    input = input.encode(sys.getfilesystemencoding())
+                stdoutdata, stderrdata = p.communicate(input=input)
                 ret = p.wait()
             finally:
                 del p
@@ -110,7 +113,7 @@ class ExternalRuntime(AbstractRuntime):
 
                 p = None
                 try:
-                    p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self._cwd)
+                    p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self._cwd, universal_newlines=True)
                     stdoutdata, stderrdata = p.communicate()
                     ret = p.wait()
                 finally:
@@ -123,7 +126,7 @@ class ExternalRuntime(AbstractRuntime):
 
         def _fail_on_non_zero_status(self, status, stdoutdata, stderrdata):
             if status != 0:
-                raise exceptions.RuntimeError("stdout: {}, stderr: {}".format(repr(stdoutdata), repr(stderrdata)))
+                raise exceptions.RuntimeError(status=status, stdout=stdoutdata, stderr=stderrdata)
 
         def _compile(self, source):
             runner_source = self._runtime._runner_source
@@ -145,12 +148,11 @@ class ExternalRuntime(AbstractRuntime):
             return runner_source
 
         def _extract_result(self, output):
-            output = output.decode(self._runtime._encoding)
             output = output.replace("\r\n", "\n").replace("\r", "\n")
             output_last_line = output.split("\n")[-2]
 
             if not output_last_line:
-                status = value = None
+                raise exceptions.ProgramError
             else:
                 ret = json.loads(output_last_line)
                 if len(ret) == 1:
@@ -159,8 +161,6 @@ class ExternalRuntime(AbstractRuntime):
 
             if status == "ok":
                 return value
-            elif value.startswith('SyntaxError:'):
-                raise exceptions.RuntimeError(value)
             else:
                 raise exceptions.ProgramError(value)
 
@@ -241,7 +241,8 @@ def jsc():
     return ExternalRuntime(
         name="JavaScriptCore",
         command=["/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc"],
-        runner_source=_runner_sources.JavaScriptCore
+        runner_source=_runner_sources.JavaScriptCore,
+        tempfile=True
     )
 
 
@@ -249,7 +250,8 @@ def spidermonkey():
     return ExternalRuntime(
         name="SpiderMonkey",
         command=["js"],
-        runner_source=_runner_sources.SpiderMonkey
+        runner_source=_runner_sources.SpiderMonkey,
+        tempfile=True
     )
 
 
@@ -267,7 +269,8 @@ def phantomjs():
     return ExternalRuntime(
         name="PhantomJS",
         command=["phantomjs"],
-        runner_source=_runner_sources.PhantomJS
+        runner_source=_runner_sources.PhantomJS,
+        tempfile=True
     )
 
 
@@ -275,7 +278,8 @@ def slimerjs():
     return ExternalRuntime(
         name="SlimerJS",
         command=["slimerjs"],
-        runner_source=_runner_sources.SlimerJS
+        runner_source=_runner_sources.SlimerJS,
+        tempfile=True
     )
 
 
@@ -283,5 +287,6 @@ def nashorn():
     return ExternalRuntime(
         name="Nashorn",
         command=["jjs"],
-        runner_source=_runner_sources.Nashorn
+        runner_source=_runner_sources.Nashorn,
+        tempfile=True
     )

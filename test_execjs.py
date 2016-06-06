@@ -75,11 +75,11 @@ class RuntimeTestBase:
         self.assertTrue(self.runtime.exec_(code))
 
     def test_syntax_error(self):
-        with self.assertRaises(execjs.RuntimeError):
+        with self.assertRaises(execjs.ProgramError):
             self.runtime.exec_(")")
 
     def test_thrown_exception(self):
-        with self.assertRaises(execjs.ProgramError):
+        with self.assertRaises(execjs.RuntimeError):
             self.runtime.exec_("throw 'hello'")
 
     def test_broken_substitutions(self):
