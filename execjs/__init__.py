@@ -41,16 +41,16 @@ runtimes = execjs._runtimes.runtimes
 get_from_environment = execjs._runtimes.get_from_environment
 
 
-def eval(source):
-    return get().eval(source)
-eval.__doc__= AbstractRuntime.eval.__doc__
+def eval(source, cwd=None):
+    return get().eval(source, cwd)
+eval.__doc__ = AbstractRuntime.eval.__doc__
 
 
-def exec_(source):
-    return get().exec_(source)
-exec_.__doc__= AbstractRuntime.exec_.__doc__
+def exec_(source, cwd=None):
+    return get().exec_(source, cwd)
+exec_.__doc__ = AbstractRuntime.exec_.__doc__
 
 
-def compile(source):
-    return get().compile(source)
-compile.__doc__= AbstractRuntime.compile.__doc__
+def compile(source, cwd=None):
+    return get().compile(source, cwd)
+compile.__doc__ = AbstractRuntime.compile.__doc__
