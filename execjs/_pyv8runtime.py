@@ -53,7 +53,7 @@ class PyV8Runtime(AbstractRuntime):
                 try:
                     script = engine.compile(source)
                 except js_errors as e:
-                    raise exceptions.RuntimeError(e)
+                    raise exceptions.ProgramError(e)
                 try:
                     value = script.run()
                 except js_errors as e:
