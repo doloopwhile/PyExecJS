@@ -25,7 +25,7 @@ class RuntimeTestBase:
 
     def test_context_call_missing_function(self):
         context = self.runtime.compile("")
-        with self.assertRaises(execjs.ProgramError):
+        with self.assertRaises(execjs.Error):
             context.call("missing")
 
     def test_exec(self):
@@ -75,11 +75,11 @@ class RuntimeTestBase:
         self.assertTrue(self.runtime.exec_(code))
 
     def test_syntax_error(self):
-        with self.assertRaises(execjs.RuntimeError):
+        with self.assertRaises(execjs.Error):
             self.runtime.exec_(")")
 
     def test_thrown_exception(self):
-        with self.assertRaises(execjs.ProgramError):
+        with self.assertRaises(execjs.Error):
             self.runtime.exec_("throw 'hello'")
 
     def test_broken_substitutions(self):
@@ -91,20 +91,17 @@ class DefaultRuntimeTest(unittest.TestCase, RuntimeTestBase):
     def setUp(self):
         self.runtime = execjs
 
+class NodeRuntimeTest(unittest.TestCase, RuntimeTestBase):
+    def setUp(self):
+        self.runtime = execjs.get('Node')
 
-for name, runtime in execjs.runtimes().items():
-    if not runtime.is_available():
-        continue
-    class_name = name.capitalize() + "RuntimeTest"
+class NashornRuntimeTest(unittest.TestCase, RuntimeTestBase):
+    def setUp(self):
+        self.runtime = execjs.get('Nashorn')
 
-    def f(runtime=runtime):
-        class RuntimeTest(unittest.TestCase, RuntimeTestBase):
-            def setUp(self):
-                self.runtime = runtime
-        RuntimeTest.__name__ = str(class_name)  # 2.x compatibility
-        return RuntimeTest
-    exec("{class_name} = f()".format(class_name=class_name))
-
+class PhantomJSRuntimeTest(unittest.TestCase, RuntimeTestBase):
+    def setUp(self):
+        self.runtime = execjs.get('PhantomJS')
 
 class CommonTest(unittest.TestCase):
     def test_empty_path_environ(self):

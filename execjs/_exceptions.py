@@ -3,7 +3,11 @@ class Error(Exception):
 
 
 class RuntimeError(Error):
-    pass
+    def __init__(self, status, stdout, stderr):
+        Error.__init__(self, status, stdout, stderr)
+        self.status = status
+        self.stdout = stdout
+        self.stderr = stderr
 
 
 class ProgramError(Error):
