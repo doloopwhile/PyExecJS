@@ -1,36 +1,30 @@
 dist: trusty
 language: python
 
+addons:
+  firefox: "latest"
+
 python:
   - "2.7"
   - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"    
 
 env:
   global:
-    - "SLIMERJSLAUNCHER=$(which firefox)"
-    - "DISPLAY=:99.0"
-    - "PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH"
     - "JDK=oracle8"
 
 jdk:
   - oraclejdk8
 
 install:
-  - "sh -e /etc/init.d/xvfb start"
-  - "echo 'Installing Slimer'"
-  - "wget http://download.slimerjs.org/releases/0.9.6/slimerjs-0.9.6-linux-x86_64.tar.bz2"
-  - "tar xvf slimerjs-*.tar.bz2"
-  - "rm slimerjs-*.tar.bz2"
-  - "mv slimerjs-* slimerjs"
   - "sudo apt-get install -y oracle-java8-installer phantomjs libmozjs-24-bin"
   - "sudo ln -s /usr/bin/js24 /usr/bin/js"
   - "./install_development.sh"
   - "python setup.py install"
 
 script:
-  - "slimerjs --version"
   - "jjs -v < /dev/null"
   - "js --help"
   - "node --version && node --help"
