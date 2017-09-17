@@ -22,14 +22,19 @@ A short example:
 
 # Supported runtimes
 
+## First-class support (runtime class is provided and tested)
+
 * [PyV8](http://code.google.com/p/pyv8/) - A python wrapper for Google V8 engine,
 * [Node.js](http://nodejs.org/)
-* Apple JavaScriptCore - Included with Mac OS X
-* [Mozilla SpiderMonkey](http://www.mozilla.org/js/spidermonkey/)
-* [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
-* [SlimerJS](http://slimerjs.org/)
 * [PhantomJS](http://phantomjs.org/)
 * [Nashorn](http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16) - Included with Oracle Java 8
+
+## Second-class support (runtime class is privided but not tested)
+
+* Apple JavaScriptCore - Included with Mac OS X
+* [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
+* [SlimerJS](http://slimerjs.org/)
+* [Mozilla SpiderMonkey](http://www.mozilla.org/js/spidermonkey/)
 
 # Installation
 
