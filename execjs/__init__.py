@@ -22,7 +22,13 @@ A short example:
 '''
 from __future__ import unicode_literals, division, with_statement
 
-from execjs._exceptions import Error, RuntimeError, ProgramError, RuntimeUnavailableError
+from execjs._exceptions import (
+    Error,
+    RuntimeError,
+    ProgramError,
+    RuntimeUnavailableError,
+)
+
 import execjs._runtimes
 from execjs._external_runtime import ExternalRuntime
 from execjs._abstract_runtime import AbstractRuntime

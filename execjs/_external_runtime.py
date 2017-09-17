@@ -11,7 +11,12 @@ import tempfile
 import six
 import execjs._json2 as _json2
 import execjs._runner_sources as _runner_sources
-import execjs._exceptions as exceptions
+
+from execjs._exceptions import (
+    ProcessExitedWithNonZeroStatus,
+    ProgramError
+)
+
 from execjs._abstract_runtime import AbstractRuntime
 from execjs._abstract_runtime_context import AbstractRuntimeContext
 from execjs._misc import encode_unicode_codepoints
@@ -126,7 +131,7 @@ class ExternalRuntime(AbstractRuntime):
 
         def _fail_on_non_zero_status(self, status, stdoutdata, stderrdata):
             if status != 0:
-                raise exceptions.RuntimeError(status=status, stdout=stdoutdata, stderr=stderrdata)
+                raise ProcessExitedWithNonZeroStatus(status=status, stdout=stdoutdata, stderr=stderrdata)
 
         def _compile(self, source):
             runner_source = self._runtime._runner_source
@@ -151,18 +156,15 @@ class ExternalRuntime(AbstractRuntime):
             output = output.replace("\r\n", "\n").replace("\r", "\n")
             output_last_line = output.split("\n")[-2]
 
-            if not output_last_line:
-                raise exceptions.ProgramError
-            else:
-                ret = json.loads(output_last_line)
-                if len(ret) == 1:
-                    ret = [ret[0], None]
-                status, value = ret
+            ret = json.loads(output_last_line)
+            if len(ret) == 1:
+                ret = [ret[0], None]
+            status, value = ret
 
             if status == "ok":
                 return value
             else:
-                raise exceptions.ProgramError(value)
+                raise ProgramError(value)
 
 
 def _is_windows():
