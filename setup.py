@@ -39,6 +39,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: JavaScript',
     ],
-    install_requires=["six==1.10.0"],
+    install_requires=["six >= 1.10.0"],
     test_suite="test_execjs",
 )
