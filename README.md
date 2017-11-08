@@ -84,6 +84,9 @@ Released under the MIT license. See `LICENSE` for details.
 
 # Changelog
 
+## 1.5.0
+- Eased version requirement for six.
+
 ## 1.4.1
 - Fixed arguments of module-level functions.
 - Fixed bug of execution with pipe.

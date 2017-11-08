@@ -24,18 +24,25 @@ A short example:
 Supported runtimes
 ==================
 
+First-class support (runtime class is provided and tested)
+----------------------------------------------------------
+
 -  `PyV8 <http://code.google.com/p/pyv8/>`__ - A python wrapper for
    Google V8 engine,
 -  `Node.js <http://nodejs.org/>`__
+-  `PhantomJS <http://phantomjs.org/>`__
+-  `Nashorn <http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16>`__
+   - Included with Oracle Java 8
+
+Second-class support (runtime class is privided but not tested)
+---------------------------------------------------------------
+
 -  Apple JavaScriptCore - Included with Mac OS X
--  `Mozilla SpiderMonkey <http://www.mozilla.org/js/spidermonkey/>`__
 -  `Microsoft Windows Script
    Host <http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx>`__
    (JScript)
 -  `SlimerJS <http://slimerjs.org/>`__
--  `PhantomJS <http://phantomjs.org/>`__
--  `Nashorn <http://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/intro.html#sthref16>`__
-   - Included with Oracle Java 8
+-  `Mozilla SpiderMonkey <http://www.mozilla.org/js/spidermonkey/>`__
 
 Installation
 ============
@@ -100,6 +107,11 @@ Released under the MIT license. See ``LICENSE`` for details.
 
 Changelog
 =========
+
+1.5.0
+-----
+
+-  Eased version requirement for six.
 
 1.4.1
 -----
