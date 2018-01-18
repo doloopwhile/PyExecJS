@@ -1,5 +1,15 @@
-PyExecJS
-========
+PyExecJS (EOL)
+==============
+
+End of life
+===========
+
+This library is no longer maintananced. Bugs are not be fixed (even if
+they are trivial or essential).
+
+We suggest to use other library or to make a fork.
+
+--------------
 
 Run JavaScript code from Python.
 

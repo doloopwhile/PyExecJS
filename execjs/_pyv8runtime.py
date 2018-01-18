@@ -1,5 +1,4 @@
 import json
-import contextlib
 
 import execjs._exceptions as exceptions
 from execjs._abstract_runtime import AbstractRuntime
@@ -48,7 +47,7 @@ class PyV8Runtime(AbstractRuntime):
             source = str(source)
 
             # backward compatibility
-            with contextlib.nested(PyV8.JSContext(), PyV8.JSEngine()) as (ctxt, engine):
+            with PyV8.JSContext() as ctxt, PyV8.JSEngine() as engine:
                 js_errors = (PyV8.JSError, IndexError, ReferenceError, SyntaxError, TypeError)
                 try:
                     script = engine.compile(source)
